@@ -1,0 +1,29 @@
+[settings]
+
+[settings.auth]
+    clientId = "1234567891011121314"
+    guildId = "1234567891011121314"
+    token = "abcdefghijklmnopqrstuvwxyz1234567891011121314"
+
+[settings.tickets]
+
+
+[commands]
+
+    [commands.ping]
+        name = "ping"
+        description = "Antwortet mit Pong!"
+        [commands.ping.subcommands]
+            [commands.ping.subcommands.create]
+                name = "latency"
+                description = "Gibt die Latenz des Bots zu Discord an"
+                autoComplete = true
+                [commands.ping.subcommands.create.choices]
+                    1 = "Choice 1"
+                    2 = "Choice 2"
+                    3 = "Choice 3"
+                    
+
+    [commands.hellworld]
+        name = "helloworld"
+        description = "Sagt hallo"
