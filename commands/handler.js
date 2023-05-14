@@ -2,18 +2,20 @@ const { Client} = require("discord.js")
 const ping = require("../commands/ping.js")
 const setup = require("../commands/setup.js")
 const log = require("../util/log.js")
+const permissions = require("../permissions/permissions.js")
 
 async function handle(command, client, interaction) {
 
-    if (interaction.isChatInputCommand()) {
+    if (interaction.isChatInputCommand() && await permissions.check(interaction.user.id, await permissions.getCommandPermissions(command))) {
+        log.info("Command " + command + " wird ausgeführt")
         // commands
+
         if (command == "ping") {
             ping.run(client, interaction)
-            log.info("Command " + command + " wurde ausgeführt")
-            
         } else if (command == "setup") {
             setup.run(client, interaction)
-            log.info("Command " + command + " wurde ausgeführt")
+        } else if (command == "group") {
+            setup.run(client, interaction)
         } 
 
 

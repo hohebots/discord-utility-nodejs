@@ -1,11 +1,15 @@
 [settings]
 
-[settings.auth]
-    clientId = "1234567891011121314"
-    guildId = "1234567891011121314"
-    token = "abcdefghijklmnopqrstuvwxyz1234567891011121314"
+    [settings.mongodb]
+        mongodb = "mongodb://localhost/bot"
 
-[settings.tickets]
+    [settings.auth]
+        clientId = "1234567891011121314"
+        guildId = "1234567891011121314"
+        token = "abcdefghijklmnopqrstuvwxyz1234567891011121314"
+        mongodb = "mongodb://localhost/bot"
+
+    [settings.tickets]
 
 
 [commands]
@@ -24,6 +28,6 @@
                     3 = "Choice 3"
                     
 
-    [commands.hellworld]
+    [commands.helloworld]
         name = "helloworld"
         description = "Sagt hallo"
