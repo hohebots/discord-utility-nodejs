@@ -3,6 +3,7 @@ const log = require("../util/log")
 const groups = require("./groups")
 const User = require("./models/User")
 const { Client } = require("discord.js")
+const clientStorage = require("../util/client")
 
 async function create(id, name, permissions) {
     if (await find(id) == null) {
@@ -14,26 +15,49 @@ async function create(id, name, permissions) {
 }
 
 async function find(id) {
-    const user = User.findOne({id: id})
+    const user = await User.findOne({id: id})
     return user
 }
 
 async function getPermisisons(uID) {
     user = await find(uID)
-    group = await groups.find("")
+    var userPermissions = []
+
     if (user == null) {
         return []
     } else {
-        return user["permissions"]
+        var userPermissions = user["permissions"]
+        try {
+            for (const group of user.groups) {
+                userGroup = await groups.find(group)
+                if (userGroup == null) {
+                    const index = user.groups.indexOf(group);
+                    if (index > -1) { // only splice array when item is found
+                        user.groups.splice(index, 1); // 2nd parameter means remove one item only
+                    }
+                    user.save()
+
+                } else {
+                    for (const groupPermission of userGroup["permissions"]) {
+                        userPermissions.push(groupPermission)
+                    }
+                }
+                
+            }
+            
+        } catch (e) {
+            log.error("MongoDB: " + e)
+        }
+        return userPermissions
     }
 
-    // todo: implement groups
 }
 
 async function addGroup(uID, gID) {
-    member = await find(uID)
+    var member = await find(uID)
     if (member == null) {
-        initMember(uID)
+        await initMember(uID)
+        member = await find(uID)
     }
     if (!member.groups.includes(gID)){
         member.groups.push(gID)
@@ -45,8 +69,11 @@ async function addGroup(uID, gID) {
 }
 
 async function initMember(uID) {
-    let user = Client.users.fetch(uID);
-    // kommt noch
+    const client = clientStorage.getClientInstance()
+    let user = await client.users.fetch(uID);
+    await create(uID, user.username, [])
+    const member = await find(uID)
+    return member
 }
 
 module.exports = {

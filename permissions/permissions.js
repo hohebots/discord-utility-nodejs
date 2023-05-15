@@ -15,7 +15,7 @@ async function create(id, name, description) {
 }
 
 async function find(id) {
-    const permission = Permission.findOne({id: id})
+    const permission = await Permission.findOne({id: id})
     return permission
 }
 

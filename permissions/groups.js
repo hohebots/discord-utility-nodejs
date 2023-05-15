@@ -12,7 +12,7 @@ async function create(id, name, linkedDiscordGroup, permissions) {
 }
 
 async function find(id) {
-    const group = Group.findOne({id: id})
+    const group = await Group.findOne({id: id})
     return group
 }
 
