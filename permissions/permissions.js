@@ -44,6 +44,7 @@ async function check(uID, permissions) {
 }
 
 async function getCommandPermissions(commandName) {
+    console.log(commandName)
     conf = await config.load()
     commandPermissions = conf.commands[commandName].requiredPermissions
     if (commandPermissions == undefined) {

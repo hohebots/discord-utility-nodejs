@@ -1,12 +1,14 @@
 const { Client} = require("discord.js")
 const ping = require("../commands/ping.js")
+const config = require("../config/load.js")
 const setup = require("../commands/setup.js")
 const log = require("../util/log.js")
 const permissions = require("../permissions/permissions.js")
-
-async function handle(command, client, interaction) {
-
-    if (interaction.isChatInputCommand() && await permissions.check(interaction.user.id, await permissions.getCommandPermissions(command))) {
+const clientStorage = require("../util/client.js")
+async function handle(client, interaction) {
+    if (interaction.isChatInputCommand() && await permissions.check(interaction.user.id, await permissions.getCommandPermissions(interaction.commandName))) {
+        console.log(interaction.command)
+        const command = interaction.commandName;
         log.info("Command " + command + " wird ausgeführt")
         // commands
 
@@ -20,20 +22,38 @@ async function handle(command, client, interaction) {
 
 
     } else if (interaction.isAutocomplete()) {
-        // autocomplete request
-        log.info("asd")
-		const command = interaction.client.commands.get(interaction.commandName);
-
-		if (!command) {
-			log.error("Command " + interaction.commandName + " wurde nicht gefunden");
-			return;
-		}
-
-		try {
-			await command.autocomplete(interaction);
-		} catch (error) {
-			console.error(error);
-		}
+        try {
+            var choices = []
+        
+            const commandName = interaction.commandName
+            const options = interaction.options
+            const subcommandName = options.getSubcommand()
+            const focused = await options.getFocused(true).name
+            conf = await config.load()
+            commands = conf.commands
+            if (subcommandName != undefined) {
+                configChoices = commands[commandName].subcommands[subcommandName].options[focused].choices
+                Object.keys(configChoices).forEach(function(choice) {
+                    choices.push({
+                        name: choice,
+                        value: configChoices[choice],
+                    })
+                })
+            } else {
+                configChoices = commands[commandName].options[focused].choices
+                Object.keys(configChoices).forEach(function(choice) {
+                    choices.push({
+                        name: choice,
+                        value: configChoices[choice],
+                    })
+                })
+            }
+            interaction.respond(choices);
+            log.info("Autocomplete geschickt")
+        } catch (e){
+            log.error("Fehler bei Autocomplete request " + e)
+        }
+   
 	}
 
 

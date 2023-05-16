@@ -20,6 +20,9 @@ async function find(id) {
 }
 
 async function getPermisisons(uID) {
+
+    // add checking for linkedDiscordRole
+
     user = await find(uID)
     var userPermissions = []
 

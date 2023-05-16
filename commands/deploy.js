@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder } = require('@discordjs/builders');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const config = require("../config/load.js")
@@ -12,25 +12,26 @@ async function commands() {
 
     
     Object.keys(configCommands).forEach(function(commandName) {
-        
+        configCommand = configCommands[commandName]
         try {
             // adds basic command descriptors to the command body
             var command = new SlashCommandBuilder()
-            .setName(configCommands[commandName]["name"])
-            .setDescription(configCommands[commandName]["description"])
-        
+                .setName(configCommand["name"])
+                .setDescription(configCommand["description"])
+            
+            options = configCommand.options
+            if (options != undefined) {
+                Object.keys(configCommand["options"]).forEach(function(optionName) {
+                    command = smartAddOption(configCommand, optionName, command) // cycles through all provided options adds all them one by one (reusable for subcommands!!! yay!!)
+                })
+            }
+            
             // goes through all subcommands and appends their properties to the command body
-            if (configCommands[commandName]["subcommands"] != undefined) {
-                Object.keys(configCommands[commandName]["subcommands"]).forEach(function(subCommandName) {
-                    if (configCommands[commandName]["subcommands"][subCommandName]["autoComplete"] == undefined) {
-                        var autoComplete = false
-                    } else {
-                        var autoComplete = configCommands[commandName]["subcommands"][subCommandName]["autoComplete"]
-                    }
-                    command = command.addStringOption(option =>
-                        option.setName(configCommands[commandName]["subcommands"][subCommandName]["name"])
-                            .setDescription(configCommands[commandName]["subcommands"][subCommandName]["description"])
-                            .setAutocomplete(autoComplete))
+            if (configCommand.subcommands != undefined) {
+
+                Object.keys(configCommand.subcommands).forEach(function(subCommandName) {
+                    configSubcommand = configCommand.subcommands[subCommandName]                    
+                    command = smartAddSubcommand(configSubcommand, command)
                 })
             }
             
@@ -51,6 +52,42 @@ async function commands() {
         .catch(console.error);
 }
 
+
+
+function smartAddOption(configCommand, optionName, command) { // todo: implement .setRequired(bool)
+    option = configCommand.options[optionName]
+
+    if (option.autoComplete == undefined) {
+        var autoComplete = false
+    } else {
+        var autoComplete = option.autoComplete
+    }
+    
+    optionName = option["name"]
+    optionDescription = option["description"]
+    
+    return command.addStringOption(option => 
+        option
+            .setName(optionName)
+            .setDescription(optionDescription)
+            .setAutocomplete(autoComplete))
+}
+
+function smartAddSubcommand(configSubCommand, command) {
+    var subcommand = new SlashCommandSubcommandBuilder()
+            .setName(configSubcommand["name"])
+            .setDescription(configSubcommand["description"])
+
+    if (configSubcommand["options"] != undefined) {
+        Object.keys(configSubcommand["options"]).forEach(function(optionName) {
+            subcommand = smartAddOption(configSubCommand, optionName, subcommand) // cycles through all provided options adds all them one by one (reusable for subcommands!!! yay!!)
+        })
+    }
+    
+
+    return command.addSubcommand(subcommand)
+}
+ 
 module.exports = {
     commands: commands
 }

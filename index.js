@@ -23,8 +23,7 @@ async function start() {
     });
 
     client.on('interactionCreate', async interaction => {
-        const { commandName } = interaction;
-        handler.handle(commandName, client, interaction)
+        handler.handle(client, interaction)
     });
 }
 

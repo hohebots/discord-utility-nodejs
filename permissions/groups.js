@@ -2,9 +2,9 @@ const mongoose = require("mongoose")
 const log = require("../util/log")
 const Group = require("./models/Group")
 
-async function create(id, name, linkedDiscordGroup, permissions) {
+async function create(id, name, linkedDiscordRole, permissions) {
     if (await find(id) == null) {
-        const group = new Group({id: id, name: name, linkedDiscordGroup: linkedDiscordGroup, permissions: permissions})
+        const group = new Group({id: id, name: name, linkedDiscordRole: linkedDiscordRole, permissions: permissions})
         group.save().then(() => log.info("MongoDB: Gruppe " + name + " gespeichert"))
     } else {
         log.warn("MongoDB: Gruppe " + name + " konnte nicht erstellt werden. Existiert bereits")
