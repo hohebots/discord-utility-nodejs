@@ -30,8 +30,14 @@ async function addPermission(gID, pID) {
     
 }
 
+async function getLinkedGroup(linkedDiscordRoleId) {
+    const group = await Group.findOne({linkedDiscordRole: linkedDiscordRoleId})
+    return group
+}
+
 module.exports = {
     create,
     find,
-    addPermission
+    addPermission,
+    getLinkedGroup
 }

@@ -22,7 +22,7 @@ async function commands() {
             options = configCommand.options
             if (options != undefined) {
                 Object.keys(configCommand["options"]).forEach(function(optionName) {
-                    command = smartAddOption(configCommand, optionName, command) // cycles through all provided options adds all them one by one (reusable for subcommands!!! yay!!)
+                    command = smartAddOption(configCommand, optionName, command, configCommand["options"][optionName].type) // cycles through all provided options adds all them one by one (reusable for subcommands!!! yay!!)
                 })
             }
             
@@ -54,7 +54,7 @@ async function commands() {
 
 
 
-function smartAddOption(configCommand, optionName, command) { // todo: implement .setRequired(bool)
+function smartAddOption(configCommand, optionName, command, type) { // todo: implement .setRequired(bool) and types
     option = configCommand.options[optionName]
 
     if (option.autoComplete == undefined) {
@@ -66,11 +66,26 @@ function smartAddOption(configCommand, optionName, command) { // todo: implement
     optionName = option["name"]
     optionDescription = option["description"]
     
-    return command.addStringOption(option => 
-        option
-            .setName(optionName)
-            .setDescription(optionDescription)
-            .setAutocomplete(autoComplete))
+    if (type == undefined || type == "string") {
+        return command.addStringOption(option => 
+            option
+                .setName(optionName)
+                .setDescription(optionDescription)
+                .setAutocomplete(autoComplete))
+    } else if (type == "user") {
+        return command.addUserOption(option => 
+            option
+                .setName(optionName)
+                .setDescription(optionDescription)
+                .setAutocomplete(autoComplete))
+    } else if (type == "role") {
+        return command.addRoleOption(option => 
+            option
+                .setName(optionName)
+                .setDescription(optionDescription)
+                .setAutocomplete(autoComplete))
+    }
+    
 }
 
 function smartAddSubcommand(configSubCommand, command) {

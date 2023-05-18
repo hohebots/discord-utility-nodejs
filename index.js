@@ -24,6 +24,7 @@ async function start() {
 
     client.on('interactionCreate', async interaction => {
         handler.handle(client, interaction)
+        
     });
 }
 

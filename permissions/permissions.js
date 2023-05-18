@@ -19,6 +19,11 @@ async function find(id) {
     return permission
 }
 
+async function getAll(id) {
+    const permission = await Permission.find()
+    return permission
+}
+
 async function initPresetPermissions() {
     conf = await config.load()
     permissions = conf.permissions
@@ -44,7 +49,6 @@ async function check(uID, permissions) {
 }
 
 async function getCommandPermissions(commandName) {
-    console.log(commandName)
     conf = await config.load()
     commandPermissions = conf.commands[commandName].requiredPermissions
     if (commandPermissions == undefined) {
@@ -59,5 +63,6 @@ module.exports = {
     create,
     find,
     check,
-    getCommandPermissions
+    getCommandPermissions,
+    getAll
 }

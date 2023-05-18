@@ -1,24 +1,35 @@
 const { Client} = require("discord.js")
 const ping = require("../commands/ping.js")
+const benchmark = require("../commands/benchmark.js")
 const config = require("../config/load.js")
 const setup = require("../commands/setup.js")
+const user = require("../commands/user.js")
 const log = require("../util/log.js")
 const permissions = require("../permissions/permissions.js")
 const clientStorage = require("../util/client.js")
+const missingpermissions = require("./missingpermissions.js")
 async function handle(client, interaction) {
-    if (interaction.isChatInputCommand() && await permissions.check(interaction.user.id, await permissions.getCommandPermissions(interaction.commandName))) {
-        console.log(interaction.command)
-        const command = interaction.commandName;
-        log.info("Command " + command + " wird ausgeführt")
-        // commands
-
-        if (command == "ping") {
-            ping.run(client, interaction)
-        } else if (command == "setup") {
-            setup.run(client, interaction)
-        } else if (command == "group") {
-            setup.run(client, interaction)
-        } 
+    if (interaction.isChatInputCommand()) {
+        if (await permissions.check(interaction.user.id, await permissions.getCommandPermissions(interaction.commandName))) {
+            const command = interaction.commandName;
+            log.info("Command " + command + " wird ausgeführt")
+            // commands
+    
+            if (command == "ping") {
+                ping.run(client, interaction)
+            } else if (command == "setup") {
+                setup.run(client, interaction)
+            } else if (command == "group") {
+                setup.run(client, interaction)
+            } else if (command == "benchmark") {
+                benchmark.run(client, interaction)
+            } else if (command == "user") {
+                benchmark.run(client, interaction)
+            } 
+        } else {
+            missingpermissions.run(client, interaction)
+        }
+  
 
 
     } else if (interaction.isAutocomplete()) {
@@ -31,22 +42,34 @@ async function handle(client, interaction) {
             const focused = await options.getFocused(true).name
             conf = await config.load()
             commands = conf.commands
-            if (subcommandName != undefined) {
-                configChoices = commands[commandName].subcommands[subcommandName].options[focused].choices
-                Object.keys(configChoices).forEach(function(choice) {
+
+            if (focused == "permission") {
+                allPermissions = await permissions.getAll()
+                for (const permission of allPermissions) {
                     choices.push({
-                        name: choice,
-                        value: configChoices[choice],
+                        name: permission.id,
+                        value: permission.description,
                     })
-                })
+                }
+                
             } else {
-                configChoices = commands[commandName].options[focused].choices
-                Object.keys(configChoices).forEach(function(choice) {
-                    choices.push({
-                        name: choice,
-                        value: configChoices[choice],
+                if (subcommandName != undefined) {
+                    configChoices = commands[commandName].subcommands[subcommandName].options[focused].choices
+                    Object.keys(configChoices).forEach(function(choice) {
+                        choices.push({
+                            name: choice,
+                            value: configChoices[choice],
+                        })
                     })
-                })
+                } else {
+                    configChoices = commands[commandName].options[focused].choices
+                    Object.keys(configChoices).forEach(function(choice) {
+                        choices.push({
+                            name: choice,
+                            value: configChoices[choice],
+                        })
+                    })
+                }
             }
             interaction.respond(choices);
             log.info("Autocomplete geschickt")
