@@ -1,7 +1,6 @@
 const groups = require("../permissions/groups.js")
 const User = require("../permissions/models/User.js")
 const config = require("../config/load.js")
-const users = require("../permissions/users.js")
 const permissions = require("../permissions/permissions.js")
 
 const log = require("../util/log.js")

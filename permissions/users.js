@@ -76,6 +76,22 @@ async function addGroup(uID, gID) { // adds a user to a group
     }
 }
 
+async function addPermission(uID, pID) { // adds a user to a group
+    var user = await find(uID)
+    if (user == null) {
+        await initUser(uID)
+        user = await find(uID)
+    }
+    if (!user.permissions.includes(pID)){
+        user.permissions.push(pID)
+        await user.save()
+        return true
+    } else {
+        log.warn("MongoDB: Nutzer hat bereits Permission " + pID)
+        return false
+    }
+}
+
 async function removeGroup(uID, gID) { // removes a user from a group
     var user = await find(uID)
     if (user == null) {
@@ -164,5 +180,6 @@ module.exports = {
     create,
     find,
     getPermisisons,
-    addGroup
+    addGroup,
+    addPermission
 }

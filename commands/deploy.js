@@ -18,7 +18,6 @@ async function commands() {
             var command = new SlashCommandBuilder()
                 .setName(configCommand["name"])
                 .setDescription(configCommand["description"])
-            
             options = configCommand.options
             if (options != undefined) {
                 Object.keys(configCommand["options"]).forEach(function(optionName) {
@@ -54,13 +53,19 @@ async function commands() {
 
 
 
-function smartAddOption(configCommand, optionName, command, type) { // todo: implement .setRequired(bool) and types
+function smartAddOption(configCommand, optionName, command, type) { // todo: make this prettier
     option = configCommand.options[optionName]
 
     if (option.autoComplete == undefined) {
         var autoComplete = false
     } else {
         var autoComplete = option.autoComplete
+    }
+
+    if (option.isRequired == undefined) {
+        var isRequired = false
+    } else {
+        var isRequired = option.isRequired
     }
     
     optionName = option["name"]
@@ -71,19 +76,20 @@ function smartAddOption(configCommand, optionName, command, type) { // todo: imp
             option
                 .setName(optionName)
                 .setDescription(optionDescription)
-                .setAutocomplete(autoComplete))
+                .setAutocomplete(autoComplete)
+                .setRequired(isRequired))
     } else if (type == "user") {
         return command.addUserOption(option => 
             option
                 .setName(optionName)
                 .setDescription(optionDescription)
-                .setAutocomplete(autoComplete))
+                .setRequired(isRequired))
     } else if (type == "role") {
         return command.addRoleOption(option => 
             option
                 .setName(optionName)
                 .setDescription(optionDescription)
-                .setAutocomplete(autoComplete))
+                .setRequired(isRequired))
     }
     
 }
@@ -95,7 +101,7 @@ function smartAddSubcommand(configSubCommand, command) {
 
     if (configSubcommand["options"] != undefined) {
         Object.keys(configSubcommand["options"]).forEach(function(optionName) {
-            subcommand = smartAddOption(configSubCommand, optionName, subcommand) // cycles through all provided options adds all them one by one (reusable for subcommands!!! yay!!)
+            subcommand = smartAddOption(configSubCommand, optionName, subcommand, configSubcommand["options"][optionName].type) // cycles through all provided options adds all them one by one (reusable for subcommands!!! yay!!)
         })
     }
     

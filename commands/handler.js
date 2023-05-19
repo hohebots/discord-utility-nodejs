@@ -24,7 +24,7 @@ async function handle(client, interaction) {
             } else if (command == "benchmark") {
                 benchmark.run(client, interaction)
             } else if (command == "user") {
-                benchmark.run(client, interaction)
+                user.run(client, interaction)
             } 
         } else {
             missingpermissions.run(client, interaction)
@@ -47,8 +47,8 @@ async function handle(client, interaction) {
                 allPermissions = await permissions.getAll()
                 for (const permission of allPermissions) {
                     choices.push({
-                        name: permission.id,
-                        value: permission.description,
+                        name: permission.name,
+                        value: permission.id,
                     })
                 }
                 
