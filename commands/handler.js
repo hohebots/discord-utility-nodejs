@@ -8,8 +8,13 @@ const log = require("../util/log.js")
 const permissions = require("../permissions/permissions.js")
 const clientStorage = require("../util/client.js")
 const missingpermissions = require("./missingpermissions.js")
+const modalhandler = require("./modalhandler.js")
+const buttonhandler = require("./handlers/buttonHandler.js")
+const selectionhandler = require("./selectionhandler.js")
+const nuke = require("./nuke.js")
 async function handle(client, interaction) {
-    if (interaction.isChatInputCommand()) {
+
+    if (interaction.isCommand()) {
         if (await permissions.check(interaction.user.id, await permissions.getCommandPermissions(interaction.commandName))) {
             const command = interaction.commandName;
             log.info("Command " + command + " wird ausgeführt")
@@ -25,9 +30,11 @@ async function handle(client, interaction) {
                 benchmark.run(client, interaction)
             } else if (command == "user") {
                 user.run(client, interaction)
+            } else if (command == "nuke") {
+                nuke.run(client, interaction)
             } 
         } else {
-            missingpermissions.run(client, interaction)
+            missingpermissions.run(interaction)
         }
   
 
@@ -57,8 +64,8 @@ async function handle(client, interaction) {
                     configChoices = commands[commandName].subcommands[subcommandName].options[focused].choices
                     Object.keys(configChoices).forEach(function(choice) {
                         choices.push({
-                            name: choice,
-                            value: configChoices[choice],
+                            name: configChoices[choice],
+                            value: choice,
                         })
                     })
                 } else {
@@ -77,12 +84,15 @@ async function handle(client, interaction) {
             log.error("Fehler bei Autocomplete request " + e)
         }
    
-	}
+	} else if (interaction.isModalSubmit()) {
+        modalhandler.handle(client, interaction)
 
-
-
-
+    } else if (interaction.isStringSelectMenu()) {
+        selectionhandler.handle(client, interaction)
     
+    } else if (interaction.isButton()) {
+        buttonhandler.handle(interaction)
+    }
 }
 
 module.exports = {

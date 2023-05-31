@@ -35,7 +35,7 @@ async function run(client, interaction) {
                 await interaction.reply({ embeds: [interactionFailEmbed], ephemeral: true})
             }
             
-        }
+        } // todo: implement remove
             
     }
 }

@@ -6,9 +6,9 @@ const User = require("./models/User")
 const { Client } = require("discord.js")
 const clientStorage = require("../util/client")
 
-async function create(id, name, permissions) {
+async function create(id, name, userPermissions) {
     if (await find(id) == null) {
-        const user = new User({id: id, name: name, permissions: permissions})
+        const user = new User({id: id, name: name, permissions: userPermissions})
         user.save().then(() => log.info("MongoDB: Nutzer " + name + " gespeichert"))
     } else {
         log.warn("MongoDB: Nutzer " + name + " konnte nicht erstellt werden. Existiert bereits")
@@ -19,6 +19,13 @@ async function find(id) { // returns user entry in db by userid
     const user = await User.findOne({id: id})
     return user
 }
+
+async function getAll() { // returns user entry in db by userid
+    const users = await User.find()
+    return users
+}
+
+
 
 async function getPermisisons(uID) { // returns list of a given users permissions
 
@@ -63,6 +70,7 @@ async function getPermisisons(uID) { // returns list of a given users permission
 }
 
 async function addGroup(uID, gID) { // adds a user to a group
+
     var user = await find(uID)
     if (user == null) {
         await initUser(uID)
@@ -77,6 +85,7 @@ async function addGroup(uID, gID) { // adds a user to a group
 }
 
 async function addPermission(uID, pID) { // adds a user to a group
+
     var user = await find(uID)
     if (user == null) {
         await initUser(uID)
@@ -181,5 +190,6 @@ module.exports = {
     find,
     getPermisisons,
     addGroup,
-    addPermission
+    addPermission,
+    getAll
 }

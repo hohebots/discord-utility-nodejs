@@ -25,7 +25,7 @@ async function commands() {
                 })
             }
             
-            // goes through all subcommands and appends their properties to the command body
+            // goes through all subcommands and appends their properties, including options, to the command body
             if (configCommand.subcommands != undefined) {
 
                 Object.keys(configCommand.subcommands).forEach(function(subCommandName) {

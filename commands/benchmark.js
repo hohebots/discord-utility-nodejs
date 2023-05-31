@@ -37,7 +37,7 @@ async function run(client, interaction) {
             }
         }
         afterAll = Date.now()
-        const missingPermissionsEmbed = new EmbedBuilder()
+        const benchmarkCompleteEmbed = new EmbedBuilder()
             .setColor(0x57F287) // discord green
             .setTitle('Benchmark abgeschlossen')
             .setAuthor({ name: 'Benchmark', iconURL: 'https://i.imgur.com/x3RsBWG.png'})
@@ -54,7 +54,7 @@ async function run(client, interaction) {
             "ms\n *Bot Latenz*: " + botLatency + "ms",
             inline: true })
 
-        await interaction.reply({ embeds: [missingPermissionsEmbed], ephemeral: true})
+        await interaction.reply({ embeds: [benchmarkCompleteEmbed], ephemeral: true})
         log.info("Benchmark: Datenbank Benchmark beendet. Gesamte Zeit: " + (afterAll - beforeAll) + "ms, durchschnittlicher cycle: " + (afterAll - beforeAll)/iterations + "ms. Gemachte Abrufe: " + callsMade)
     }
     

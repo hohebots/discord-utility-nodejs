@@ -3,7 +3,9 @@ const log = require("../util/log")
 const Permission = require("./models/Permission")
 const users = require("./users")
 const groups = require("./groups")
+const clientStorage = require("../util/client")
 const config = require("../config/load")
+const { commands } = require("../commands/deploy")
 
 async function create(id, name, description) {
     if (await find(id) == null) {
@@ -33,7 +35,7 @@ async function initPresetPermissions() {
 } 
 
 async function check(uID, permissions) {
-    if (permissions == null) { // returns true if the command does not require any permissions
+    if (permissions == null) { // returns true if no permissions are required
         return true
     }
 
@@ -51,12 +53,35 @@ async function check(uID, permissions) {
 async function getCommandPermissions(commandName) {
     conf = await config.load()
     commandPermissions = conf.commands[commandName].requiredPermissions
-    if (commandPermissions == undefined) {
+    if (commandPermissions == undefined) { // this case will never happen due to the bot crashing whenever an undefined command is called. todo: use try catch/detect if the command itself is undefined rather than this
         return null
     } else {
         return commandPermissions
     }
 }
+
+async function getPermittedUsers(perms) {
+    client = clientStorage.getClientInstance()
+    conf = await config.load()
+    guildId = conf.settings.auth.guildId
+    guild = client.guilds.cache.get(guildId)
+    allUsers = await users.getAll()
+    permittedUsers = [] 
+    
+    for (user of allUsers) {
+        
+        try {
+            const member = await guild.members.fetch(user.id);
+            hasPermissions = await check(user.id, perms)
+            if (hasPermissions) {
+                permittedUsers.push(user.id)
+            }
+        } catch {
+            log.warn("Nutzer " + user.name + " nicht vorhanden")
+        }
+    }
+    return permittedUsers
+} 
 
 module.exports = {
     initPresetPermissions,
@@ -64,5 +89,6 @@ module.exports = {
     find,
     check,
     getCommandPermissions,
-    getAll
+    getAll,
+    getPermittedUsers
 }
