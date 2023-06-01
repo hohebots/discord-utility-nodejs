@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder } = require('@discordjs/builders');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-const config = require("../config/load.js")
+const config = require("../util/config.js")
 const log = require("../util/log.js")
 
 async function commands() {

@@ -1,13 +1,15 @@
 const groups = require("../permissions/groups.js")
 const User = require("../permissions/models/User.js")
-const config = require("../config/load.js")
+const config = require("../util/config.js")
 const permissions = require("../permissions/permissions.js")
 
 const log = require("../util/log.js")
 const { EmbedBuilder } = require("@discordjs/builders")
+const { getClientInstance } = require("../util/client.js")
 
 
-async function run(client, interaction) {
+async function run(interaction) {
+    client = getClientInstance()
     conf = config.load()
     beforeAll = Date.now()
     const botLatency = interaction.createdTimestamp - beforeAll
@@ -40,7 +42,7 @@ async function run(client, interaction) {
         const benchmarkCompleteEmbed = new EmbedBuilder()
             .setColor(0x57F287) // discord green
             .setTitle('Benchmark abgeschlossen')
-            .setAuthor({ name: 'Benchmark', iconURL: 'https://i.imgur.com/x3RsBWG.png'})
+            .setAuthor({ name: 'Benchmark', iconURL: 'https://i.imgur.com/pKsq653.png'})
             .setDescription("Benchmark Ergebnisse:")
             .addFields({ name: 'Datenbank',
              value: "*Gesamte Zeit:* " + (afterAll - beforeAll) + 

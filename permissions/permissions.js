@@ -4,7 +4,7 @@ const Permission = require("./models/Permission")
 const users = require("./users")
 const groups = require("./groups")
 const clientStorage = require("../util/client")
-const config = require("../config/load")
+const config = require("../util/config")
 const { commands } = require("../commands/deploy")
 
 async function create(id, name, description) {

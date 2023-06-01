@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 const log = require("../util/log")
 const groups = require("./groups")
-const config = require("../config/load")
+const config = require("../util/config")
 const User = require("./models/User")
 const { Client } = require("discord.js")
 const clientStorage = require("../util/client")
@@ -87,18 +87,21 @@ async function addGroup(uID, gID) { // adds a user to a group
 async function addPermission(uID, pID) { // adds a user to a group
 
     var user = await find(uID)
-    if (user == null) {
+    if (!user) {
         await initUser(uID)
         user = await find(uID)
-    }
-    if (!user.permissions.includes(pID)){
+        console.log(user)
         user.permissions.push(pID)
         await user.save()
         return true
-    } else {
+    }
+    if (user.permissions.includes(pID)){
         log.warn("MongoDB: Nutzer hat bereits Permission " + pID)
         return false
     }
+    user.permissions.push(pID)
+    await user.save()
+    return true
 }
 
 async function removeGroup(uID, gID) { // removes a user from a group

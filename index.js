@@ -1,9 +1,9 @@
 const log = require("./util/log.js")
 const deploy = require("./commands/deploy.js")
-const config = require("./config/load.js");
+const config = require("./util/config.js");
 const database = require("./permissions/database.js")
 const permissions = require("./permissions/permissions.js")
-const handler = require("./commands/handler.js")
+const handler = require("./handlers/commandHandler.js")
 const clientStorage = require("./util/client.js")
 const { Client, GatewayIntentBits } = require("discord.js")
 
@@ -13,8 +13,10 @@ async function start() {
     const settings = conf.settings["auth"]
     const client = new Client({ 
         intents: [
-            GatewayIntentBits.GuildMembers
-        ] });
+            GatewayIntentBits.GuildMembers,
+            GatewayIntentBits.GuildEmojisAndStickers
+        ]
+    });
 
     await client.login(settings["token"]);
     
@@ -31,17 +33,14 @@ async function start() {
         await interaction.guild.roles.fetch()
         await interaction.guild.channels.fetch()
         await interaction.guild.members.fetch()
-        handler.handle(client, interaction)
+        handler.handle(interaction)
     });}
 
 start()
 
-
-
+// fix: close permissions
+// todo: ticket system mit modals integrieren
 // todo: redo all icons and switch to better image uploader
 // todo: redo module system so /setup autocompletes with all modules dynamically
 // todo: config options for setting icons for embeds
 // todo: implement response deferring
-// refactor: rename load.js to config.js and move it to util
-// refactor: rename client.js to clientStorage.js because it nervs extremst
-// refactor: remove client argument from all interactions

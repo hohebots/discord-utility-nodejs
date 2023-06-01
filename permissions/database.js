@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 const log = require("../util/log")
-const config = require("../config/load")
+const config = require("../util/config")
 const groupsModel = require("./models/Group")
 const permissionsModel = require("./models/Permission")
 const usersModel = require("./models/User")

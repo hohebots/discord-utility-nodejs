@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require("@discordjs/builders")
 const users = require("../permissions/users.js")
 
-async function run(client, interaction) {
+async function run(interaction) {
     if (interaction.options.getSubcommand() == "permission") {
         const operation = interaction.options.getString("operation")
         const user = interaction.options.getUser("user")
@@ -9,12 +9,12 @@ async function run(client, interaction) {
 
         
         if (operation == "add") {
-            if (users.addPermission(user.id, permission) == true) {
+            if (await users.addPermission(user.id, permission) == true) {
                 dbUser = await users.find(user.id)
                 const interactionSuccessEmbed = new EmbedBuilder()
                     .setColor(0x57F287) // discord green
                     .setTitle('Permission zugewiesen')
-                    .setAuthor({ name: 'Permission', iconURL: 'https://i.imgur.com/x3RsBWG.png'})
+                    .setAuthor({ name: 'Permission', iconURL: 'https://i.imgur.com/pKsq653.png'})
                     .setDescription("Nutzerinformationen:")
                     .addFields({ name: user.username,
                         value: "*Permissions:* " + dbUser.permissions.join(", "), 
@@ -24,9 +24,9 @@ async function run(client, interaction) {
             } else {
                 dbUser = await users.find(user.id)
                 const interactionFailEmbed = new EmbedBuilder()
-                    .setColor(0xED4245) // discord green
+                    .setColor(0xED4245) // discord red
                     .setTitle('Fehlgeschlagen')
-                    .setAuthor({ name: 'Permission', iconURL: 'https://i.imgur.com/681yPtc.png'})
+                    .setAuthor({ name: 'Permission', iconURL: 'https://i.imgur.com/LmU5d3E.png'})
                     .setDescription("Nutzer hat diese Permission bereits")
                     .addFields({ name: user.username,
                         value: "*Permissions:* " + dbUser.permissions.join(", "), 
