@@ -1,4 +1,4 @@
-const log = require("../util/log")
+const log = require("../../util/log")
 const Module = require("./models/Module")
 const Ticket = require("./models/Ticket")
 const TicketBooth = require("./models/TicketBooth")
@@ -20,18 +20,11 @@ async function findTicket(user, reason, moduleId) {
 
 async function deleteTicket(user, reason, moduleId) {
     await Ticket.findOneAndDelete({moduleId: moduleId, reason: reason, user: user})
-    log.info("MongoDB: Ticket von " + user + " wurde gelöscht")
-}
-
-async function createTicketClaim(user, reason, moduleId, claimingId) {
-    ticket = await findTicket(user, reason, moduleId)
-    ticket.claimedBy = claimingId
-    ticket.save().then(() => log.info("MongoDB: Ticket von wurde von " + claimingId + " geclaimed"))
 }
 
 async function createTicket(moduleId, user, reason, channel) {
     if (await findTicket(user, reason, moduleId) == null) {
-        const ticket = new Ticket({reason: reason, user: user, channel: channel, moduleId: moduleId, claimedBy: "0"})
+        const ticket = new Ticket({reason: reason, user: user, channel: channel, moduleId: moduleId})
         ticket.save().then(() => log.info("MongoDB: Ticket von " + user + " erstellt"))
         return true
     } else {
@@ -81,6 +74,5 @@ module.exports = {
     findModule,
     findTicketBooth,
     findTicket,
-    deleteTicket,
-    createTicketClaim
+    deleteTicket
 }

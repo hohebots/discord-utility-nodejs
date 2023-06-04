@@ -6,6 +6,9 @@ async function handle(interaction) {
     
     if (action == "closeTicket") {
         tickets.closeTicket(buttonResponse, interaction)
+
+    } else if (action == "claimTicket") {
+        tickets.claimTicket(buttonResponse, interaction)
     }
 
 }

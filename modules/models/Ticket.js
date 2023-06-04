@@ -5,7 +5,8 @@ const schema = Schema({
     reason: String,
     user: String,
     channel: String,
-    moduleId: String
+    moduleId: String,
+    claimedBy: String
 });
 
 

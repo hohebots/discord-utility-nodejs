@@ -42,29 +42,27 @@ async function run(interaction) {
         const benchmarkCompleteEmbed = new EmbedBuilder()
             .setColor(0x57F287) // discord green
             .setTitle('Benchmark abgeschlossen')
-            .setAuthor({ name: 'Benchmark', iconURL: 'https://i.imgur.com/pKsq653.png'})
+            .setAuthor({
+                name: 'Benchmark', 
+                iconURL: 'https://i.imgur.com/pKsq653.png'})
             .setDescription("Benchmark Ergebnisse:")
-            .addFields({ name: 'Datenbank',
-             value: "*Gesamte Zeit:* " + (afterAll - beforeAll) + 
-             "ms\n *Durchschnittlicher cycle:* " + (afterAll - beforeAll)/iterations + 
-             "ms\n *Gemachte Abrufe:* " + callsMade + 
-             "\n Abrufe pro Sekunde: " + Number((callsMade/(afterAll - beforeAll)*1000).toFixed(1)),
-             inline: true })
+            .addFields({ 
+                name: 'Datenbank',
+                value: "*Gesamte Zeit:* " + (afterAll - beforeAll) + 
+                "ms\n *Durchschnittlicher cycle:* " + (afterAll - beforeAll)/iterations + 
+                "ms\n *Gemachte Abrufe:* " + callsMade + 
+                "\n Abrufe pro Sekunde: " + Number((callsMade/(afterAll - beforeAll)*1000).toFixed(1)),
+                inline: true })
 
-            .addFields({ name: "Latenz",
-            value: "*Discord API Latenz*: " + client.ws.ping + 
-            "ms\n *Bot Latenz*: " + botLatency + "ms",
-            inline: true })
+            .addFields({ 
+                name: "Latenz",
+                value: "*Discord API Latenz*: " + client.ws.ping + 
+                "ms\n *Bot Latenz*: " + botLatency + "ms",
+                inline: true })
 
         await interaction.reply({ embeds: [benchmarkCompleteEmbed], ephemeral: true})
         log.info("Benchmark: Datenbank Benchmark beendet. Gesamte Zeit: " + (afterAll - beforeAll) + "ms, durchschnittlicher cycle: " + (afterAll - beforeAll)/iterations + "ms. Gemachte Abrufe: " + callsMade)
-    }
-    
-    
-
-    
-
-    
+    } 
 }
 
 module.exports = {

@@ -38,9 +38,10 @@ async function start() {
 
 start()
 
-// fix: close permissions
-// todo: ticket system mit modals integrieren
-// todo: redo all icons and switch to better image uploader
+// refactor: move modules directory from commands somewhere else
+// refactor: rename permissions directory
+// refactor: give every command a folder
+// todo: ticket system closeTicket mit abfrage
+// todo: switch to better image uploader
 // todo: redo module system so /setup autocompletes with all modules dynamically
-// todo: config options for setting icons for embeds
 // todo: implement response deferring

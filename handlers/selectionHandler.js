@@ -8,11 +8,11 @@ const tickets = require("../modules/tickets")
 
 
 async function handle(interaction) {
-    const potentialModule = await moduleUtil.findModule(interaction.customId) // gets the module from which the request was sent, if is a module at all   
+    const potentialModule = await moduleUtil.findModule(interaction.customId) // gets the module from which the request was sent, if is a module at all
 
     if (potentialModule != null) {
         if (potentialModule.type == "tickets"){
-            tickets.createTicket(interaction, potentialModule)
+            tickets.initTicket(interaction, potentialModule)
         }
     }
 }

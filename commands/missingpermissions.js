@@ -1,6 +1,4 @@
 const { EmbedBuilder } = require("@discordjs/builders");
-const groups = require("../permissions/groups.js")
-const users = require("../permissions/users.js")
 
 async function run(interaction) {
     

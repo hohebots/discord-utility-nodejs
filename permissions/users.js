@@ -29,13 +29,15 @@ async function getAll() { // returns user entry in db by userid
 
 async function getPermisisons(uID) { // returns list of a given users permissions
 
+    await resyncRoles(uID) // resynchronizes all groups and their link discord roles
+    
     conf = await config.load()
     user = await find(uID)
     if (user == null) {
         user = await initUser(uID)
     }
 
-    await resyncRoles(uID) // resynchronizes all groups and their link discord roles
+    
     
     var userPermissions = []
 
@@ -70,17 +72,23 @@ async function getPermisisons(uID) { // returns list of a given users permission
 }
 
 async function addGroup(uID, gID) { // adds a user to a group
-
     var user = await find(uID)
-    if (user == null) {
+    var group = await groups.find(gID)
+    if (!user) {
         await initUser(uID)
         user = await find(uID)
+    }
+    if (!group) {
+        log.warn("MongoDB: Gruppe " + gID + " existiert nicht")
+        return false
     }
     if (!user.groups.includes(gID)){
         user.groups.push(gID)
         await user.save()
+        return true
     } else {
         log.warn("MongoDB: Nutzer ist bereits in Gruppe " + gID)
+        return false
     }
 }
 
@@ -90,18 +98,33 @@ async function addPermission(uID, pID) { // adds a user to a group
     if (!user) {
         await initUser(uID)
         user = await find(uID)
-        console.log(user)
+    }
+    if (!user.permissions.includes(pID)){
         user.permissions.push(pID)
         await user.save()
         return true
-    }
-    if (user.permissions.includes(pID)){
+    } else {
         log.warn("MongoDB: Nutzer hat bereits Permission " + pID)
         return false
     }
-    user.permissions.push(pID)
-    await user.save()
-    return true
+    
+}
+
+async function removePermission(uID, pID) { // removes a permission from a user
+    var user = await find(uID)
+    if (user == null) {
+        await initUser(uID)
+        user = await find(uID)
+        return false
+    }
+    if (user.permissions.includes(pID)){
+        user.permissions = user.permissions.filter(item => item !== pID)
+        await user.save()
+        return true
+    } else {
+        log.warn("MongoDB: Nutzer hat nicht Permssion " + pID)
+        return false
+    }
 }
 
 async function removeGroup(uID, gID) { // removes a user from a group
@@ -109,13 +132,14 @@ async function removeGroup(uID, gID) { // removes a user from a group
     if (user == null) {
         await initUser(uID)
         user = await find(uID)
-        return
     }
     if (user.groups.includes(gID)){
         user.groups = user.groups.filter(item => item !== gID)
         await user.save()
+        return true
     } else {
         log.warn("MongoDB: Nutzer ist nicht in Gruppe " + gID)
+        return false
     }
 }
 
@@ -194,5 +218,7 @@ module.exports = {
     getPermisisons,
     addGroup,
     addPermission,
-    getAll
+    getAll,
+    removePermission,
+    removeGroup
 }
