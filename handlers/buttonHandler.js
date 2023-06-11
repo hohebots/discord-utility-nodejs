@@ -1,14 +1,14 @@
-const tickets = require("../modules/tickets")
+const ticketHandler = require('../modules/handlers/ticketHandler.js');
 
 async function handle(interaction) {
     buttonResponse = interaction.customId.split("-")
     action = buttonResponse[0]
     
     if (action == "closeTicket") {
-        tickets.closeTicket(buttonResponse, interaction)
+        await ticketHandler.closeTicket(buttonResponse, interaction)
 
     } else if (action == "claimTicket") {
-        tickets.claimTicket(buttonResponse, interaction)
+        await ticketHandler.claimTicket(buttonResponse, interaction)
     }
 
 }

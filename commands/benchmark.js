@@ -60,7 +60,7 @@ async function run(interaction) {
                 "ms\n *Bot Latenz*: " + botLatency + "ms",
                 inline: true })
 
-        await interaction.reply({ embeds: [benchmarkCompleteEmbed], ephemeral: true})
+        await interaction.editReply({ embeds: [benchmarkCompleteEmbed], ephemeral: true})
         log.info("Benchmark: Datenbank Benchmark beendet. Gesamte Zeit: " + (afterAll - beforeAll) + "ms, durchschnittlicher cycle: " + (afterAll - beforeAll)/iterations + "ms. Gemachte Abrufe: " + callsMade)
     } 
 }

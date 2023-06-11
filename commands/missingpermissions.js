@@ -8,7 +8,7 @@ async function run(interaction) {
         .setAuthor({ name: 'Fehler', iconURL: 'https://i.imgur.com/LmU5d3E.png'})
         .setDescription('Du hast keine Berechtigungen um dies zu tun.')
 
-    await interaction.reply({ embeds: [missingPermissionsEmbed], ephemeral: true})
+    await interaction.editReply({ embeds: [missingPermissionsEmbed], ephemeral: true})
 }
 
 module.exports = {

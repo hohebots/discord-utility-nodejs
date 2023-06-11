@@ -13,8 +13,13 @@ const failed = require("../commands/failed.js")
 const autoCompleteHandler = require("./autoCompleteHandler.js")
 const missingPermissions = require("../commands/missingPermissions.js")
 const group = require("../commands/group/index.js")
+const config = require("../util/config.js")
+const moduleCommandHandler = require("./moduleCommandHandler.js")
+const info = require("../commands/info.js")
+
 
 async function handle(interaction) {
+    conf = config.load()
     if (interaction.isCommand()) {
         if (await permissions.check(interaction.user.id, await permissions.getCommandPermissions(interaction.commandName))) {
             const command = interaction.commandName
@@ -33,7 +38,13 @@ async function handle(interaction) {
                     await user.run(interaction)
                 } else if (command == "nuke") {
                     await nuke.run(interaction)
-                } 
+                } else if (command == "nuke") {
+                    await nuke.run(interaction)
+                } else if (command == "info") {
+                    await info.run(interaction)
+                } else if (conf.modules[command]){
+                    await moduleCommandHandler.handle(interaction)
+                }
             } catch (e) {
                 failed.run(interaction, e)/
                 log.error(e)
@@ -41,7 +52,7 @@ async function handle(interaction) {
             }
             
         } else {
-            missingPermissions.run(interaction)
+            await missingPermissions.run(interaction)
         }
   
 
@@ -54,13 +65,25 @@ async function handle(interaction) {
         }
    
 	} else if (interaction.isModalSubmit()) {
-        modalHandler.handle(interaction)
+        try {
+            await modalHandler.handle(interaction)
+        } catch (e){
+            log.error("Fehler bei Modal request " + e)
+        }
 
     } else if (interaction.isStringSelectMenu()) {
-        selectionHandler.handle(interaction)
+        try {
+            await selectionHandler.handle(interaction)
+        } catch (e){
+            log.error("Fehler bei Selection request " + e)
+        }
     
     } else if (interaction.isButton()) {
-        buttonHandler.handle(interaction)
+        try {
+            await buttonHandler.handle(interaction)
+        } catch (e){
+            log.error("Fehler bei Button request " + e)
+        }
     }
 }
 

@@ -22,7 +22,7 @@ async function run(interaction) {
                     value: "*Permissions:* " + dbGroup.permissions.join(", "), 
                     inline: true })
 
-            await interaction.reply({ embeds: [interactionSuccessEmbed], ephemeral: true})
+            await interaction.editReply({ embeds: [interactionSuccessEmbed], ephemeral: true})
         } else {
             dbGroup = await groups.find(group)
             const interactionFailEmbed = new EmbedBuilder()
@@ -34,7 +34,7 @@ async function run(interaction) {
                     value: "*Permissions:* " + dbGroup.permissions.join(", "), 
                     inline: true })
 
-            await interaction.reply({ embeds: [interactionFailEmbed], ephemeral: true})
+            await interaction.editReply({ embeds: [interactionFailEmbed], ephemeral: true})
         }
         
     } else if (operation == "remove") {
@@ -50,7 +50,7 @@ async function run(interaction) {
                     value: "*Permissions:* " + dbGroup.permissions.join(", "), 
                     inline: true })
 
-            await interaction.reply({ embeds: [interactionSuccessEmbed], ephemeral: true})
+            await interaction.editReply({ embeds: [interactionSuccessEmbed], ephemeral: true})
         } else {
             dbGroup = await groups.find(group)
             const interactionFailEmbed = new EmbedBuilder()
@@ -62,7 +62,7 @@ async function run(interaction) {
                     value: "*Permissions:* " + dbGroup.permissions.join(", "), 
                     inline: true })
 
-            await interaction.reply({ embeds: [interactionFailEmbed], ephemeral: true})
+            await interaction.editReply({ embeds: [interactionFailEmbed], ephemeral: true})
         }
         
     }

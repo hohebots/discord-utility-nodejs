@@ -33,15 +33,21 @@ async function start() {
         await interaction.guild.roles.fetch()
         await interaction.guild.channels.fetch()
         await interaction.guild.members.fetch()
-        handler.handle(interaction)
+        await interaction.deferReply({ephemeral: true});
+        await handler.handle(interaction)
     });}
 
 start()
 
-// refactor: move modules directory from commands somewhere else
+
+// refactor: split util/tickets.js to tickets.js and ticketBooths.js 
 // refactor: rename permissions directory
+// refactor: subcommands folder for each command
 // refactor: give every command a folder
+// refactor: change file.js imports to file 
 // todo: ticket system closeTicket mit abfrage
 // todo: switch to better image uploader
 // todo: redo module system so /setup autocompletes with all modules dynamically
 // todo: implement response deferring
+// todo: save open ticket modal responses in db so tickets.reload can recover them
+// todo: optimsations regarding asynchronous running of commands

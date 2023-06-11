@@ -4,7 +4,7 @@ const users = require("../permissions/users.js")
 
 async function run(interaction) {
 
-    interaction.reply("pong")
+    interaction.editReply("pong")
 }
 
 module.exports = {

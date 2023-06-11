@@ -2,12 +2,11 @@ const { ActionRowBuilder, Events, ModalBuilder, TextInputBuilder, TextInputStyle
 const { SelectMenuBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('@discordjs/builders');
 const permissions = require('../permissions/permissions.js');
 const log = require('../util/log.js');
-const tickets = require('../modules/tickets.js');
 const randomstring = require('randomstring');
 
 async function run(interaction) {
     if (interaction.options.getSubcommand() == "create") {
-        const module = interaction.options.getString("module")
+        const module = interaction.options.getString("moduletype")
         if (module == "tickets") {
             const ticketBoothCreationModal = new ModalBuilder()
                 .setCustomId('ticketBoothCreationModal')

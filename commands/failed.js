@@ -10,7 +10,7 @@ async function run(interaction, e) {
         .setAuthor({ name: 'Fehler', iconURL: 'https://i.imgur.com/LmU5d3E.png'})
         .setDescription('Dieser Command konnte aufgrund eines Internen Fehlers nicht ausgeführt werden. Falls dieser Fehler wiederholt auftritt, kontaktiere mths#3066. Fehlercode: '+e.name)
 
-    await interaction.reply({ embeds: [commandFailedEmbed], ephemeral: true})
+    await interaction.editReply({ embeds: [commandFailedEmbed], ephemeral: true})
 }
 
 module.exports = {

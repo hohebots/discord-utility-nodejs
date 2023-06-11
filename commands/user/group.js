@@ -17,7 +17,7 @@ async function run(interaction) {
                     value: "*Gruppen:* " + dbUser.groups.join(", "), 
                     inline: true })
                 .setImage("https://cdn.discordapp.com/avatars/"+user.id+"/"+user.avatar+".png")
-            await interaction.reply({ embeds: [interactionSuccessEmbed], ephemeral: true})
+            await interaction.editReply({ embeds: [interactionSuccessEmbed], ephemeral: true})
         } else {
             dbUser = await users.find(user.id)
             const interactionFailEmbed = new EmbedBuilder()
@@ -29,7 +29,7 @@ async function run(interaction) {
                     value: "*Gruppen:* " + dbUser.groups.join(", "), 
                     inline: true })
                 .setImage("https://cdn.discordapp.com/avatars/"+user.id+"/"+user.avatar+".png")
-            await interaction.reply({ embeds: [interactionFailEmbed], ephemeral: true})
+            await interaction.editReply({ embeds: [interactionFailEmbed], ephemeral: true})
         }
         
     } else if (operation == "remove") {
@@ -44,7 +44,7 @@ async function run(interaction) {
                     value: "*Gruppen:* " + dbUser.groups.join(", "), 
                     inline: true })
                 .setImage("https://cdn.discordapp.com/avatars/"+user.id+"/"+user.avatar+".png")
-            await interaction.reply({ embeds: [interactionSuccessEmbed], ephemeral: true})
+            await interaction.editReply({ embeds: [interactionSuccessEmbed], ephemeral: true})
         } else {
             
             dbUser = await users.find(user.id)
@@ -57,7 +57,7 @@ async function run(interaction) {
                     value: "*Gruppen:* " + dbUser.groups.join(", "), 
                     inline: true })
                 .setImage("https://cdn.discordapp.com/avatars/"+user.id+"/"+user.avatar+".png")
-            await interaction.reply({ embeds: [interactionFailEmbed], ephemeral: true})
+            await interaction.editReply({ embeds: [interactionFailEmbed], ephemeral: true})
         }   
     }
 }

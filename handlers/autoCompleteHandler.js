@@ -2,6 +2,7 @@ const config = require("../util/config.js")
 const log = require("../util/log.js")
 const permissions = require("../permissions/permissions.js")
 const groups = require("../permissions/groups.js")
+const modules = require("../modules/util/modules.js")
 
 async function handle(interaction) {
     var choices = []
@@ -37,6 +38,22 @@ async function handle(interaction) {
                 value: group.id,
             })
         }
+
+    } else if (focused == "module") {
+        allModules = await modules.getAll()
+        for (const module of allModules) {
+            if (module.name == null) {
+                module.name = module.id
+            }
+            if (module.id == null) {
+                module.id = "Fehler"
+            }
+
+            choices.push({
+                name: module.name,
+                value: module.id,
+            })
+        }
         
     // custom config variables
     } else {
@@ -58,7 +75,7 @@ async function handle(interaction) {
             })
         }
     }
-    interaction.respond(choices);
+    await interaction.respond(choices);
     log.info("Autocomplete geschickt")
 }
 

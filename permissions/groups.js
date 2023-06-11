@@ -54,7 +54,36 @@ async function linkGroup(gID, rID) {
     }
     log.warn("MongoDB: Gruppe " + group.name + " nicht gefunden" + pID)
     return false
+}
 
+async function rename(gID, name) {
+    group = await find(gID)
+
+    if (group != undefined) {
+        group.name = name
+        group.save()
+        return true
+    }
+    log.warn("MongoDB: Gruppe " + group.name + " nicht gefunden" + pID)
+    return false
+}
+
+async function unlinkGroup(gID) {
+    group = await find(gID)
+
+    if (group == undefined) {
+        log.warn("MongoDB: Gruppe " + group.name + " nicht gefunden")
+        return false
+    }
+
+    if (group.linkedDiscordRole == undefined) {
+        log.warn("MongoDB: Gruppe " + group.name + " hat keine verbundene Rolle" )
+        return false
+    }
+
+    group.linkedDiscordRole = undefined
+    group.save()
+    return true
 }
 
 async function removePermission(gID, pID) { // removes a permission from a user
@@ -90,5 +119,7 @@ module.exports = {
     getLinkedGroup,
     deleteGroup,
     removePermission,
-    linkGroup
+    linkGroup,
+    unlinkGroup,
+    rename
 }
