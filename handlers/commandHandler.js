@@ -1,11 +1,9 @@
 const { Client} = require("discord.js")
-const ping = require("../commands/ping.js")
 const benchmark = require("../commands/benchmark.js")
 const setup = require("../commands/setup.js")
 const user = require("../commands/user/index.js")
 const log = require("../util/log.js")
 const permissions = require("../permissions/permissions.js")
-const nuke = require("../commands/nuke.js")
 const buttonHandler = require("./buttonHandler.js")
 const selectionHandler = require("./selectionHandler.js")
 const modalHandler = require("./modalHandler.js")
@@ -16,19 +14,24 @@ const group = require("../commands/group/index.js")
 const config = require("../util/config.js")
 const moduleCommandHandler = require("./moduleCommandHandler.js")
 const info = require("../commands/info.js")
+const ban = require("../commands/ban/index.js")
+const kick = require("../commands/kick/index.js")
+const reload = require("../commands/reload/index.js")
 
 
 async function handle(interaction) {
-    conf = config.load()
+    conf = await config.load()
     if (interaction.isCommand()) {
+        if (!conf.commands[interaction.commandName].disableResponseDeferring) {
+            await interaction.deferReply({ephemeral: true});
+        } 
+        
         if (await permissions.check(interaction.user.id, await permissions.getCommandPermissions(interaction.commandName))) {
             const command = interaction.commandName
             log.info("Command " + command + " wird ausgeführt")
             // commands
             try {
-                if (command == "ping") {
-                    await ping.run(interaction)
-                } else if (command == "setup") {
+                if (command == "setup") {
                     await setup.run(interaction)
                 } else if (command == "group") {
                     await group.run(interaction)
@@ -36,12 +39,14 @@ async function handle(interaction) {
                     await benchmark.run(interaction)
                 } else if (command == "user") {
                     await user.run(interaction)
-                } else if (command == "nuke") {
-                    await nuke.run(interaction)
-                } else if (command == "nuke") {
-                    await nuke.run(interaction)
                 } else if (command == "info") {
                     await info.run(interaction)
+                } else if (command == "ban") {
+                    await ban.run(interaction)
+                } else if (command == "kick") {
+                    await kick.run(interaction)
+                } else if (command == "reload") {
+                    await reload.run(interaction)
                 } else if (conf.modules[command]){
                     await moduleCommandHandler.handle(interaction)
                 }

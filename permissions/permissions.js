@@ -2,10 +2,10 @@ const mongoose = require("mongoose")
 const log = require("../util/log")
 const Permission = require("./models/Permission")
 const users = require("./users")
-const groups = require("./groups")
 const clientStorage = require("../util/client")
 const config = require("../util/config")
 const { commands } = require("../commands/deploy")
+const baseUserUtil = require("./baseUtil/baseUsers")
 
 async function create(id, name, description) {
     if (await find(id) == null) {
@@ -41,6 +41,11 @@ async function check(uID, permissions) {
 
     var hasPermissions = true
     userPermissions = await users.getPermisisons(uID)
+
+    if (userPermissions.includes("admin")) { // returns true if user has admin permissionso
+        return true
+    }
+
     permissions.forEach(function (permission, index) {
         if (!userPermissions.includes(permission)) {
             hasPermissions = false
@@ -65,7 +70,7 @@ async function getPermittedUsers(perms) {
     conf = await config.load()
     guildId = conf.settings.auth.guildId
     guild = client.guilds.cache.get(guildId)
-    allUsers = await users.getAll()
+    allUsers = await baseUserUtil.getAll()
     permittedUsers = [] 
     
     for (user of allUsers) {

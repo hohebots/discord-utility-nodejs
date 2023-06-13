@@ -16,9 +16,8 @@ async function run(interaction) {
     var callsMade = 0
     if (interaction.options.getSubcommand() == "start") {
         iterations = interaction.options.getString("iterations")
-
         log.info("Benchmark: Starte Datenbank Benchmark")
-        
+    
         for (let i = 0; i < iterations; i++) { 
             beforeSingle = Date.now()
             callsMade = callsMade + 1

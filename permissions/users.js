@@ -5,40 +5,18 @@ const config = require("../util/config")
 const User = require("./models/User")
 const { Client } = require("discord.js")
 const clientStorage = require("../util/client")
-
-async function create(id, name, userPermissions) {
-    if (await find(id) == null) {
-        const user = new User({id: id, name: name, permissions: userPermissions})
-        user.save().then(() => log.info("MongoDB: Nutzer " + name + " gespeichert"))
-    } else {
-        log.warn("MongoDB: Nutzer " + name + " konnte nicht erstellt werden. Existiert bereits")
-    }
-}
-
-async function find(id) { // returns user entry in db by userid
-    const user = await User.findOne({id: id})
-    return user
-}
-
-async function getAll() { // returns user entry in db by userid
-    const users = await User.find()
-    return users
-}
-
-
+const baseUserUtil = require("./baseUtil/baseUsers")
 
 async function getPermisisons(uID) { // returns list of a given users permissions
 
     await resyncRoles(uID) // resynchronizes all groups and their link discord roles
     
     conf = await config.load()
-    user = await find(uID)
+    user = await baseUserUtil.find(uID)
     if (user == null) {
-        user = await initUser(uID)
+        user = await baseUserUtil.initUser(uID)
     }
 
-    
-    
     var userPermissions = []
 
     for (const userPermission of user["permissions"]) {
@@ -72,11 +50,11 @@ async function getPermisisons(uID) { // returns list of a given users permission
 }
 
 async function addGroup(uID, gID) { // adds a user to a group
-    var user = await find(uID)
+    var user = await baseUserUtil.find(uID)
     var group = await groups.find(gID)
     if (!user) {
-        await initUser(uID)
-        user = await find(uID)
+        await baseUserUtil.initUser(uID)
+        user = await baseUserUtil.find(uID)
     }
     if (!group) {
         log.warn("MongoDB: Gruppe " + gID + " existiert nicht")
@@ -94,10 +72,10 @@ async function addGroup(uID, gID) { // adds a user to a group
 
 async function addPermission(uID, pID) { // adds a user to a group
 
-    var user = await find(uID)
+    var user = await baseUserUtil.find(uID)
     if (!user) {
-        await initUser(uID)
-        user = await find(uID)
+        await baseUserUtil.initUser(uID)
+        user = await baseUserUtil.find(uID)
     }
     if (!user.permissions.includes(pID)){
         user.permissions.push(pID)
@@ -111,10 +89,10 @@ async function addPermission(uID, pID) { // adds a user to a group
 }
 
 async function removePermission(uID, pID) { // removes a permission from a user
-    var user = await find(uID)
+    var user = await baseUserUtil.find(uID)
     if (user == null) {
-        await initUser(uID)
-        user = await find(uID)
+        await baseUserUtil.initUser(uID)
+        user = await baseUserUtil.find(uID)
         return false
     }
     if (user.permissions.includes(pID)){
@@ -128,10 +106,10 @@ async function removePermission(uID, pID) { // removes a permission from a user
 }
 
 async function removeGroup(uID, gID) { // removes a user from a group
-    var user = await find(uID)
+    var user = await baseUserUtil.find(uID)
     if (user == null) {
-        await initUser(uID)
-        user = await find(uID)
+        await baseUserUtil.initUser(uID)
+        user = await baseUserUtil.find(uID)
     }
     if (user.groups.includes(gID)){
         user.groups = user.groups.filter(item => item !== gID)
@@ -151,9 +129,9 @@ async function resyncRoles(uID) {
 async function removeDesyncedGroups(uID) { // adds all groups linked to members roles if not present
     try {
         conf = await config.load()
-        user = await find(uID)
+        user = await baseUserUtil.find(uID)
         if (user == null) {
-            user = await initUser(uID)
+            user = await baseUserUtil.initUser(uID)
         }
         guildId = conf.settings.auth.guildId 
 
@@ -179,9 +157,9 @@ async function removeDesyncedGroups(uID) { // adds all groups linked to members 
 async function addDeSyncedGroups(uID) {
     try {
         conf = await config.load()
-        user = await find(uID)
+        user = await baseUserUtil.find(uID)
         if (user == null) {
-            user = await initUser(uID)
+            user = await baseUserUtil.initUser(uID)
         }
         guildId = conf.settings.auth.guildId 
 
@@ -204,21 +182,12 @@ async function addDeSyncedGroups(uID) {
     }
 }
 
-async function initUser(uID) { // initialises a users database entry
-    const client = clientStorage.getClientInstance()
-    let user = await client.users.fetch(uID);
-    await create(uID, user.username, [])
-    const result = await find(uID)
-    return result
-}
+
 
 module.exports = {
-    create,
-    find,
     getPermisisons,
     addGroup,
     addPermission,
-    getAll,
     removePermission,
     removeGroup
 }

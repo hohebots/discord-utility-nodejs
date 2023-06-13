@@ -43,7 +43,7 @@ async function createTicketChannel(guild, moduleId, user, reason) {
     }
     
     ticketChannel = await guild.channels.create({
-        name: reason + "-" + user.username,
+        name: "🔒" + reason + "-" + user.username,
         type: ChannelType.GuildText,
         parent: module.category,
         permissionOverwrites: overwrites
@@ -72,13 +72,13 @@ async function reloadAll(moduleId, guild) {
     }
 }
 
-async function reloadBooth(moduleId, guild) { // todo: finish all of this up, check if all channels in db exist, if not, create them, if its a ticket channel prob just delete the db entry ig lololol also resend ticket booth message :D
+async function reloadBooth(moduleId, guild) {
     module = await modules.find(moduleId)
     ticketCategory = await guild.channels.fetch(module.category)
     try {
         ticketBoothChannel = await guild.channels.fetch(module.mainChannel, {force: true})
     } catch { // this is run if channel is not found
-        ticketBoothChannel = await createBoothChannel(ticketCategory, moduleId, guild)
+        ticketBoothChannel = await createBoothChannel(ticketCategory, moduleId)
         await modules.setMainChannel(moduleId, ticketBoothChannel.id)
     }
 

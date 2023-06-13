@@ -1,4 +1,3 @@
-const users = require("../../permissions/users.js")
 const groups = require("../../permissions/groups.js")
 const { EmbedBuilder } = require("@discordjs/builders")
 

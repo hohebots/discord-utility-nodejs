@@ -1,6 +1,9 @@
 const mongoose = require("mongoose")
 const log = require("../util/log")
+const baseUserUtil = require("./baseUtil/baseUsers")
 const Group = require("./models/Group")
+const clientStorage = require("../util/client")
+const config = require("../util/config")
 
 async function create(id, name, linkedDiscordRole, permissions) {
     if (await find(id) == null) {
@@ -45,9 +48,24 @@ async function addPermission(gID, pID) {
 }
 
 async function linkGroup(gID, rID) {
+    
     group = await find(gID)
 
     if (group != undefined) {
+        client = clientStorage.getClientInstance()
+        conf = await config.load()
+        guildId = conf.settings.auth.guildId
+        guild = client.guilds.cache.get(guildId)
+        role = await guild.roles.fetch(rID)
+        members = role.members
+        for (member of members) {
+            await baseUserUtil.initUser(member[0])
+            user = await baseUserUtil.find(member[0])
+            if (!user.groups.includes(gID)) {
+                user.groups.push(gID)
+                await user.save()
+            }
+        }
         group.linkedDiscordRole = rID
         group.save()
         return true

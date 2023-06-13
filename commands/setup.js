@@ -21,6 +21,20 @@ async function run(interaction) {
             ticketBoothCreationModal.addComponents(row)
             
             await interaction.showModal(ticketBoothCreationModal)
+        } else if (module == "adminLog") {
+            const adminLogCreationModal = new ModalBuilder()
+                .setCustomId('adminLogCreationModal')
+                .setTitle('Admin Log erstellen');
+            
+            const adminLogName = new TextInputBuilder()
+                .setCustomId('name')
+                .setLabel("Name")
+                .setStyle(TextInputStyle.Short);
+
+            row = new ActionRowBuilder().addComponents(adminLogName)
+            adminLogCreationModal.addComponents(row)
+            
+            await interaction.showModal(adminLogCreationModal)
         }   
     }
 }

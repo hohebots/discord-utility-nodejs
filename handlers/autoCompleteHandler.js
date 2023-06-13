@@ -8,7 +8,12 @@ async function handle(interaction) {
     var choices = []
     const commandName = interaction.commandName
     const options = interaction.options
-    const subcommandName = options.getSubcommand()
+    try {
+        subcommandName = options.getSubcommand()
+    } catch {
+        subcommandName = undefined
+    }
+    
     const focused = await options.getFocused(true).name
     conf = await config.load()
     commands = conf.commands

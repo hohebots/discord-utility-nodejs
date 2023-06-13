@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require("@discordjs/builders")
 const users = require("../../permissions/users.js")
+const baseUserUtil = require("../../permissions/baseUtil/baseUsers.js")
 
 async function run(interaction) {
     const operation = interaction.options.getString("operation")
@@ -11,7 +12,7 @@ async function run(interaction) {
     
     if (operation == "add") {
         if (await users.addPermission(user.id, permission) == true) {
-            dbUser = await users.find(user.id)
+            dbUser = await baseUserUtil.find(user.id)
             const interactionSuccessEmbed = new EmbedBuilder()
                 .setColor(0x57F287) // discord green
                 .setTitle('Permission zugewiesen')
@@ -23,7 +24,7 @@ async function run(interaction) {
                 .setImage("https://cdn.discordapp.com/avatars/"+user.id+"/"+user.avatar+".png")
             await interaction.editReply({ embeds: [interactionSuccessEmbed], ephemeral: true})
         } else {
-            dbUser = await users.find(user.id)
+            dbUser = await baseUserUtil.find(user.id)
             const interactionFailEmbed = new EmbedBuilder()
                 .setColor(0xED4245) // discord red
                 .setTitle('Fehlgeschlagen')
@@ -38,7 +39,7 @@ async function run(interaction) {
         
     } else if (operation == "remove") {
         if (await users.removePermission(user.id, permission) == true) {
-            dbUser = await users.find(user.id)
+            dbUser = await baseUserUtil.find(user.id)
             const interactionSuccessEmbed = new EmbedBuilder()
                 .setColor(0x57F287) // discord green
                 .setTitle('Permission entzogen')
@@ -51,7 +52,7 @@ async function run(interaction) {
             await interaction.editReply({ embeds: [interactionSuccessEmbed], ephemeral: true})
         } else {
             
-            dbUser = await users.find(user.id)
+            dbUser = await baseUserUtil.find(user.id)
             const interactionFailEmbed = new EmbedBuilder()
                 .setColor(0xED4245) // discord red
                 .setTitle('Fehlgeschlagen')

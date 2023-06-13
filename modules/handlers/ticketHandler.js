@@ -24,7 +24,7 @@ async function setup(interaction) {
         type: ChannelType.GuildCategory,
     })
 
-    mainChannel = await tickets.createBoothChannel(category, moduleId, guild) // creates the ticket booth
+    mainChannel = await tickets.createBoothChannel(category, moduleId) // creates the ticket booth
     boothMessage = await tickets.sendBoothMessage(moduleId, mainChannel) // sends the ticket creation message
 
     // creates database entry for booth and ticket module
@@ -59,7 +59,7 @@ async function initTicket(interaction, potentialModule) { // todo: make this pre
             .setAuthor({ name: 'Ticket System', iconURL: 'https://i.imgur.com/Fqlf9Hg.png'})
             .setDescription('Du hast bereits ein offenes Ticket dieser Art.')
 
-        await interaction.editReply({ embeds: [ticketAlreadyOpenEmbed], ephemeral: true})
+        await interaction.reply({ embeds: [ticketAlreadyOpenEmbed], ephemeral: true})
         return
     }
 
@@ -108,7 +108,7 @@ async function createTicket(interaction, modalResponse, ticketInfo) { // todo: m
         .setAuthor({ name: 'Ticket System', iconURL: 'https://i.imgur.com/jErEqVp.png'})
         .setDescription("Dein Ticket wurde erstellt!")
 
-    await interaction.editReply({ embeds: [interactionSuccessEmbed], ephemeral: true})
+    await interaction.reply({ embeds: [interactionSuccessEmbed], ephemeral: true})
 
 }
 
@@ -151,7 +151,7 @@ async function claimTicket(buttonResponse, interaction) {
                 .setAuthor({ name: "Ticket System", iconURL: "https://i.imgur.com/Fqlf9Hg.png"})
                 .setDescription("Dieses Ticket wurde bereits von " + originalClaimer.username + " beansprucht")
             
-            await interaction.editReply({ embeds: [ticketClaimedEmbed], ephemeral: true})
+            await interaction.reply({ embeds: [ticketClaimedEmbed], ephemeral: true})
             return
         }
         await tickets.createClaim(userId, reason, moduleId, interaction.user.id)
@@ -161,7 +161,7 @@ async function claimTicket(buttonResponse, interaction) {
             .setAuthor({ name: interaction.user.username, iconURL: "https://cdn.discordapp.com/avatars/"+user.id+"/"+user.avatar+".png"})
             .setDescription("Dieses Ticket wurde von " + interaction.user.username + " beansprucht")
 
-        await interaction.editReply({ embeds: [ticketClaimedEmbed]})
+        await interaction.reply({ embeds: [ticketClaimedEmbed]})
     } else {
         missingPermissions.run(interaction)
     }

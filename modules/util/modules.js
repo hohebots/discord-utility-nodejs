@@ -11,6 +11,11 @@ async function activeModuleExists(moduleType) {
     }
 }
 
+async function findAll(moduleType) {
+    const modules = await Module.find({type: moduleType})
+    return modules
+}
+
 async function find(id) {
     const module = await Module.findOne({id: id})
     return module
@@ -24,7 +29,8 @@ async function getAll() {
 async function create(id, type, name, mainChannel, category) {
     if (await find(id) == null) {
         const module = new Module({id: id, type: type, name: name, mainChannel: mainChannel, category: category})
-        module.save().then(() => log.info("MongoDB: Modul " + id + " erstellt"))
+        await module.save()
+        log.info("MongoDB: Modul " + id + " erstellt")
         return true
     } else {
         log.warn("MongoDB: Modul " + moduleId + " konnte nicht erstellt werden. Existiert bereits")
@@ -45,5 +51,6 @@ module.exports = {
     find,
     create,
     setMainChannel,
-    getAll
+    getAll,
+    findAll
 }
