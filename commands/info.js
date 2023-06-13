@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 const path = require('path');
+const version = require("../util/version")
 const { EmbedBuilder } = require("@discordjs/builders");
 const { getClientInstance } = require("../util/client.js");
 
@@ -10,7 +11,7 @@ async function run(interaction) {
     const botLatency = interaction.createdTimestamp - beforeAll
     const discordJsVersion = Discord.version;
     const nodeJsVersion = process.version;
-
+    const botVersion = version.load()
     // Usage example
     const projectPath = '../';
     const totalLines = countLinesInProject(projectPath);
@@ -30,7 +31,7 @@ async function run(interaction) {
           
         .addFields({ 
           name: "Version",
-          value: "*discordjs*: v"+discordJsVersion+"\n*nodejs*: " + nodeJsVersion,
+          value: "*discordjs*: v"+discordJsVersion+"\n*nodejs*: " + nodeJsVersion+"\n*bot*: v" + botVersion,
           inline: true })
 
         .addFields({ 

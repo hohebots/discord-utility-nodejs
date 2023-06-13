@@ -17,7 +17,7 @@ async function updateLocalRepository() {
         log.info("Bot Update wurde durchgeführt und der Bot läuft nun mit Version", adminRelevant = true)
         return true
     } catch (error) {
-        log.error('Fehler beim Durchführen des Updates: ' + error.message, adminRelevant = true);
+        log.error('Fehler beim Durchführen des Updates: ' + error, adminRelevant = true);
         return false
     }
 }

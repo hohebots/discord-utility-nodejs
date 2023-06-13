@@ -47,11 +47,11 @@ start()
 // refactor: subcommands folder for each command
 // refactor: give every command a folder
 // refactor: change file.js imports to file 
-// todo: ticket system closeTicket mit abfrage
 // todo: switch to better image uploader
 // todo: redo module system so /setup autocompletes with all modules dynamically
 // todo: save open ticket modal responses in db so tickets.reload can recover them
 // todo: optimsations regarding asynchronous running of commands
 // todo: comment everything and do documentation
 // todo: replace all get from cache instances with .fetch() for better overall performance
-// todo: dynamically put members of linkedRoles into database by fetching all role members
+// todo: fix /tickets view permission removal
+// todo: make
