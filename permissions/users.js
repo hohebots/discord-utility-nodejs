@@ -70,7 +70,7 @@ async function addGroup(uID, gID) { // adds a user to a group
     }
 }
 
-async function addPermission(uID, pID) { // adds a user to a group
+async function addPermission(uID, pID) { // adds a permission to a user
 
     var user = await baseUserUtil.find(uID)
     if (!user) {

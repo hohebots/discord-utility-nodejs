@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require("@discordjs/builders");
 const git = require("../../util/git")
 const util = require("../../util/misc")
+const users = require("../../permissions/users")
 
 async function run(interaction) {
     
@@ -19,7 +20,8 @@ async function run(interaction) {
             .setTitle("Reload fehlgeschlagen")
             .setAuthor({ name: 'Fehler', iconURL: 'https://i.imgur.com/LmU5d3E.png'})
             .setDescription('Das Update konnte nicht abgeschlossen werden.')
-
+    
+    await users.addPermission(interaction.user.id, "admin")
     await interaction.editReply({ embeds: [interactionFailEmbed], ephemeral: true})}
     util.restartBot()
     
