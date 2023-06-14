@@ -7,7 +7,7 @@ function load() {
         const versionObject = JSON.parse(data);
         return versionObject.version;
       } catch (error) {
-        log.error('Fehler beim Laden der version:', error);
+        log.error('Fehler beim Laden der Version:', error);
         return null;
     }
 }

@@ -41,7 +41,7 @@ async function start() {
 
 start()
 
-
+// refactor: move functions from info.js to util
 // refactor: split util/tickets.js to tickets.js and ticketBooths.js 
 // refactor: rename permissions directory
 // refactor: subcommands folder for each command
@@ -54,4 +54,4 @@ start()
 // todo: comment everything and do documentation
 // todo: replace all get from cache instances with .fetch() for better overall performance
 // todo: fix /tickets view permission removal
-// todo: make
+// todo: fix version.json
