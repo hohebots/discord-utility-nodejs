@@ -21,7 +21,6 @@ async function run(interaction) {
             .setAuthor({ name: 'Fehler', iconURL: 'https://i.imgur.com/LmU5d3E.png'})
             .setDescription('Das Update konnte nicht abgeschlossen werden.')
     
-    await users.addPermission(interaction.user.id, "admin")
     await interaction.editReply({ embeds: [interactionFailEmbed], ephemeral: true})}
     util.restartBot()
     

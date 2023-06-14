@@ -3,8 +3,10 @@ const bans = require("../../permissions/bans")
 const misc = require("../../util/misc")
 const config = require("../../util/config")
 const log = require("../../util/log")
+const clientStorage = require("../../util/client")
 
 async function run(interaction) {
+    const client = await clientStorage.getClientInstance()
     const user = interaction.options.getUser("user")
     const deleteMessages = interaction.options.getString("deletemessages")
     const reason = interaction.options.getString("reason")
