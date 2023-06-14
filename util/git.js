@@ -12,7 +12,7 @@ async function updateLocalRepository() {
         await exec(`git pull ${sourceRepoURL}`);
         version = version.load()
         log.info("Bot Update wurde durchgeführt und der Bot läuft nun mit Version", adminRelevant = true)
-        await exec(`pm2 restart`);
+        await exec(`pm2 restart index`);
         return true
     } catch (error) {
         log.error('Fehler beim Durchführen des Updates: ' + error, adminRelevant = true);
