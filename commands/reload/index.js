@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require("@discordjs/builders");
 const git = require("../../util/git")
+const util = require("../../util/misc")
 
 async function run(interaction) {
     
@@ -19,8 +20,8 @@ async function run(interaction) {
             .setAuthor({ name: 'Fehler', iconURL: 'https://i.imgur.com/LmU5d3E.png'})
             .setDescription('Das Update konnte nicht abgeschlossen werden.')
 
-    await interaction.editReply({ embeds: [interactionFailEmbed], ephemeral: true})
-    }
+    await interaction.editReply({ embeds: [interactionFailEmbed], ephemeral: true})}
+    util.restartBot()
     
 }
 

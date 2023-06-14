@@ -45,7 +45,12 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function restartBot() {
+    await exec(`pm2 restart index`);
+}
+
 module.exports = {
     calculateFutureTimestamp,
-    sleep
+    sleep,
+    restartBot
 }

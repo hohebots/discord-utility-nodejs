@@ -12,7 +12,6 @@ async function updateLocalRepository() {
     await exec(`git pull ${sourceRepoURL}`);
     v = version.load()
     await log.info("Bot Update wurde durchgeführt und der Bot läuft nun mit Version v" + v, adminRelevant = true)
-    await exec(`pm2 restart index`);
     return true
     
 }
