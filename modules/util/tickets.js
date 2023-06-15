@@ -126,7 +126,14 @@ async function setChannel(moduleId, user, reason, channel) {
 
 async function createBooth(moduleId, channelId) {
     if (await findBooth(moduleId) == null) {
-        const ticketBooth = new TicketBooth({moduleId: moduleId, channelId: channelId, boothMessage: "0", viewPermissions: ["admin"], closePermissions: ["admin"], openPermissions: []})
+        const ticketBooth = new TicketBooth({
+            moduleId: moduleId,
+            channelId: channelId,
+            boothMessage: "0", 
+            viewPermissions: ["admin"], 
+            closePermissions: ["admin"], 
+            openPermissions: []})
+
         ticketBooth.save().then(() => log.info("MongoDB: Modul " + moduleId + " erstellt"))
         return true
     } else {
@@ -205,7 +212,6 @@ async function sendBoothMessage(moduleId, mainChannel) {
                 .setValue(options[option].name)
                 .setEmoji({
                     id: options[option].emoji})
-                
         );
     })
     const row = new ActionRowBuilder()
@@ -291,19 +297,18 @@ async function addBoothPermission(moduleId, permissionType, permission) {
 async function removeBoothPermission(moduleId, permissionType, permission) {
     ticketBooth = await findBooth(moduleId)
     if (permissionType == "view") {
-        viewPermissions = ticketBooth.viewPermissions
-        if (viewPermissions.includes(permission)){
-            viewPermissions = viewPermissions.filter(item => item !== permission)
+        if (ticketBooth.viewPermissions.includes(permission)){
+            viewPermissions = ticketBooth.viewPermissions.filter(item => item !== permission)
             await ticketBooth.save()
             return true
+
         } else {
             log.warn("Diese Permission ist nicht vorhanden.")
             return false
         }
     } else if (permissionType == "close") {
-        closePermissions = ticketBooth.closePermissions
-        if (closePermissions.includes(permission)){
-            closePermissions = closePermissions.filter(item => item !== permission)
+        if (ticketBooth.closePermissions.includes(permission)){
+            closePermissions = ticketBooth.closePermissions.filter(item => item !== permission)
             await ticketBooth.save()
             return true
         } else {
@@ -311,9 +316,8 @@ async function removeBoothPermission(moduleId, permissionType, permission) {
             return false
         }
     } else if (permissionType == "open") {
-        openPermissions = ticketBooth.openPermissions
-        if (openPermissions.includes(permission)){
-            openPermissions = openPermissions.filter(item => item !== permission)
+        if (ticketBooth.openPermissions.includes(permission)){
+            openPermissions = ticketBooth.openPermissions.filter(item => item !== permission)
             await ticketBooth.save()
             return true
         } else {
