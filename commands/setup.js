@@ -35,21 +35,7 @@ async function run(interaction) {
             adminLogCreationModal.addComponents(row)
             
             await interaction.showModal(adminLogCreationModal)
-        } else if (module == "tierlist") {
-            const tierlistCreationModal = new ModalBuilder()
-                .setCustomId('tierlistCreationModal')
-                .setTitle('Tierlist erstellen');
-            
-            const tierlistName = new TextInputBuilder()
-                .setCustomId('name')
-                .setLabel("Name")
-                .setStyle(TextInputStyle.Short);
-
-            row = new ActionRowBuilder().addComponents(tierlistName)
-            tierlistCreationModal.addComponents(row)
-            
-            await interaction.showModal(tierlistCreationModal)
-        }   
+        }
     }
 }
 
