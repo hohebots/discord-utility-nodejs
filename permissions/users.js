@@ -171,6 +171,13 @@ async function removeDesyncedGroups(uID) { // removes all groups linked to membe
     }
 }
 
+async function removeGroupFromAll(gID) {
+    allUsers = await baseUserUtil.getAll()
+    for (user of allUsers) {
+        removeGroup(user.id, gID)
+    }
+}
+
 async function addDeSyncedGroups(uID) {
     try {
         conf = await config.load()
@@ -206,5 +213,6 @@ module.exports = {
     addGroup,
     addPermission,
     removePermission,
-    removeGroup
+    removeGroup,
+    removeGroupFromAll
 }
