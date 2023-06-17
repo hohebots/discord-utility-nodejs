@@ -8,7 +8,7 @@ async function run(interaction) {
     if (linkedRole == undefined) {
         displayLinkedRole = "Keine"
     } else {
-        displayLinkedRole = interaction.guild.roles.cache.get(linkedRole);
+        displayLinkedRole = await interaction.guild.roles.cache.get(linkedRole);
     }  
     
     if (group != undefined) {
@@ -31,7 +31,7 @@ async function run(interaction) {
            
             .addFields({ 
                 name: "*Verbundene Rolle:*",
-                value: displayLinkedRole, 
+                value: displayLinkedRole.name, 
                 inline: true })
 
         await interaction.editReply({ embeds: [interactionSuccessEmbed], ephemeral: true})
