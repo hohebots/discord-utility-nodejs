@@ -8,7 +8,7 @@ async function run(interaction) {
     if (linkedRole == undefined) {
         displayLinkedRole = "Keine"
     } else {
-        displayLinkedRole = interaction.guild.roles.cache.get(linkedRole);
+        displayLinkedRole = await interaction.guild.roles.cache.get(linkedRole);
     }  
     
     if (group != undefined) {

@@ -169,7 +169,6 @@ async function removeDesyncedGroups(uID) { // removes all groups linked to membe
         log.warn("Keine verbundenen Rollen erkannt. " + e)
         return null
     }
-    
 }
 
 async function addDeSyncedGroups(uID) {
