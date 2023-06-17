@@ -31,7 +31,7 @@ async function run(interaction) {
            
             .addFields({ 
                 name: "*Verbundene Rolle:*",
-                value: displayLinkedRole, 
+                value: displayLinkedRole.name, 
                 inline: true })
 
         await interaction.editReply({ embeds: [interactionSuccessEmbed], ephemeral: true})
