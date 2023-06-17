@@ -8,7 +8,6 @@ const schema = Schema({
     viewPermissions: [String],
     closePermissions: [String],
     openPermissions: [String]
-    
 });
 
 

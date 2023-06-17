@@ -37,9 +37,25 @@ async function start() {
         await interaction.guild.channels.fetch()
         await interaction.guild.members.fetch()
         await handler.handle(interaction)
-    });}
+    })
+    
+    client.on('guildMemberRemove', async member => { // use this to check if tierlist user has left
+
+    });
+    
+    ;}
+
 
 start()
+
+
+
+
+
+
+
+// big refactor: give tickets and tests an id instead of passing all the bs arguments through a modal like a fucking retard ew
+// refactor: rename potentialModule to module in modulehandlers
 
 // refactor: move functions from info.js to util
 // refactor: split util/tickets.js to tickets.js and ticketBooths.js 
@@ -54,4 +70,3 @@ start()
 // todo: comment everything and do documentation
 // todo: replace all get from cache instances with .fetch() for better overall performance
 // todo: fix /tickets view permission removal
-// todo: fix version.json
