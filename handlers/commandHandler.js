@@ -51,7 +51,7 @@ async function handle(interaction) {
                     await moduleCommandHandler.handle(interaction)
                 }
             } catch (e) {
-                failed.run(interaction, e)/
+                failed.run(interaction, e)
                 log.error(e)
                 return
             }
@@ -70,6 +70,7 @@ async function handle(interaction) {
         }
    
 	} else if (interaction.isModalSubmit()) {
+        await interaction.deferReply({ephemeral: true});
         try {
             await modalHandler.handle(interaction)
         } catch (e){

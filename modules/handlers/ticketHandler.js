@@ -108,7 +108,7 @@ async function createTicket(interaction, modalResponse, ticketInfo) { // todo: m
         .setAuthor({ name: 'Ticket System', iconURL: 'https://i.imgur.com/jErEqVp.png'})
         .setDescription("Dein Ticket wurde erstellt!")
 
-    await interaction.reply({ embeds: [interactionSuccessEmbed], ephemeral: true})
+    await interaction.editReply({ embeds: [interactionSuccessEmbed], ephemeral: true}) // thissaringauinuagnu
 
 }
 
@@ -158,7 +158,7 @@ async function claimTicket(buttonResponse, interaction) {
         const ticketClaimedEmbed = new EmbedBuilder()
             .setColor(0x57F287) // discord green
             .setTitle('Ticket wurde beansprucht')
-            .setAuthor({ name: interaction.user.username, iconURL: "https://i.imgur.com/pKsq653.png"}) 
+            .setAuthor({ name: interaction.user.username, iconURL: "https://cdn.discordapp.com/avatars/"+user.id+"/"+user.avatar+".png"})
             .setDescription("Dieses Ticket wurde von " + interaction.user.username + " beansprucht")
 
         await interaction.reply({ embeds: [ticketClaimedEmbed]})

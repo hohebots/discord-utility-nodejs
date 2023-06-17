@@ -7,6 +7,16 @@ const { Client } = require("discord.js")
 const clientStorage = require("../util/client")
 const baseUserUtil = require("./baseUtil/baseUsers")
 
+async function deleteUser(uID) {
+    user = baseUserUtil.find(uID)
+    if (user == null) {
+        return false
+    }
+    await User.findOneAndDelete({id: uID})
+    log.info("MongoDB: User " + uID + " wurde gelöscht")
+    return true
+}
+
 async function getPermisisons(uID) { // returns list of a given users permissions
 
     await resyncRoles(uID) // resynchronizes all groups and their link discord roles
@@ -126,17 +136,26 @@ async function resyncRoles(uID) {
     await removeDesyncedGroups(uID)
 }
 
-async function removeDesyncedGroups(uID) { // adds all groups linked to members roles if not present
-    try {
-        conf = await config.load()
-        user = await baseUserUtil.find(uID)
-        if (user == null) {
-            user = await baseUserUtil.initUser(uID)
-        }
-        guildId = conf.settings.auth.guildId 
+async function removeDesyncedGroups(uID) { // removes all groups linked to members roles if present
+    let member
+    conf = await config.load()
+    user = await baseUserUtil.find(uID)
+    if (user == null) {
+        user = await baseUserUtil.initUser(uID)
+    }
+    guildId = conf.settings.auth.guildId 
 
-        const client = clientStorage.getClientInstance()
-        const guild = await client.guilds.fetch(guildId)
+    const client = clientStorage.getClientInstance()
+    const guild = await client.guilds.fetch(guildId)
+    
+    try {
+        member = await guild.members.fetch(user.id)
+    } catch {
+        deleteUser(user.id)
+        log.warn("Nutzer nicht gefunden.")
+        return
+    }
+    try {
         const member = await guild.members.fetch(user.id)
         const roleIds = member._roles
         for (const userGroupId of user.groups) {
@@ -144,11 +163,10 @@ async function removeDesyncedGroups(uID) { // adds all groups linked to members 
             linkedRole = userGroup.linkedDiscordRole
             if (!roleIds.includes(linkedRole) && linkedRole != undefined) {
                 await removeGroup(uID, userGroupId)
-            }
-        
+            }   
     }
     } catch (e) {
-        log.warn("Nutzer nicht gefunden/keine verbundenen Rollen erkannt. " + e)
+        log.warn("Keine verbundenen Rollen erkannt. " + e)
         return null
     }
     
