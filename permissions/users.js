@@ -19,8 +19,12 @@ async function deleteUser(uID) {
 
 async function getPermisisons(uID) { // returns list of a given users permissions
 
-    await resyncRoles(uID) // resynchronizes all groups and their link discord roles
+    resyncSuccess = await resyncRoles(uID) // resynchronizes all groups and their link discord roles
     
+    if (!resyncSuccess) {
+        return []
+    } 
+
     conf = await config.load()
     user = await baseUserUtil.find(uID)
     if (user == null) {
@@ -55,8 +59,6 @@ async function getPermisisons(uID) { // returns list of a given users permission
         log.error("MongoDB: " + e)
     }
     return userPermissions
-
-
 }
 
 async function addGroup(uID, gID) { // adds a user to a group
@@ -132,8 +134,13 @@ async function removeGroup(uID, gID) { // removes a user from a group
 }
 
 async function resyncRoles(uID) {
-    await addDeSyncedGroups(uID)
-    await removeDesyncedGroups(uID)
+    addSuccess = await addDeSyncedGroups(uID)
+    removeSuccess = await removeDesyncedGroups(uID)
+    if (addSuccess && removeSuccess) {
+        return true
+    } else {
+        return false
+    }
 }
 
 async function removeDesyncedGroups(uID) { // removes all groups linked to members roles if present
@@ -153,7 +160,7 @@ async function removeDesyncedGroups(uID) { // removes all groups linked to membe
     } catch {
         deleteUser(user.id)
         log.warn("Nutzer nicht gefunden.")
-        return
+        return false
     }
     try {
         const member = await guild.members.fetch(user.id)
@@ -167,8 +174,9 @@ async function removeDesyncedGroups(uID) { // removes all groups linked to membe
     }
     } catch (e) {
         log.warn("Keine verbundenen Rollen erkannt. " + e)
-        return null
+        return false
     }
+    return true
 }
 
 async function removeGroupFromAll(gID) {
@@ -200,9 +208,10 @@ async function addDeSyncedGroups(uID) {
             }
         
         }
+        return true
     } catch (e) {
         log.warn("Nutzer nicht gefunden/keine verbundenen Rollen erkannt." + e)
-        return null
+        return false
     }
 }
 
