@@ -74,9 +74,7 @@ async function getPermittedUsers(perms) {
     permittedUsers = [] 
     
     for (user of allUsers) {
-        
         try {
-            const member = await guild.members.fetch(user.id);
             hasPermissions = await check(user.id, perms)
             if (hasPermissions) {
                 permittedUsers.push(user.id)

@@ -10,12 +10,12 @@ const schema = Schema({
     ingameName: String,
     testMessage: String,
     testChannel: String,
-    createdOn: String,
-    acceptedOn: String,
-    completedOn: String,
+    createdAt: String,
+    acceptedAt: String,
+    completedAt: String,
     finaliseTest: String,
     moduleId: String
 });
 
 
-module.exports = mongoose.model("Module", schema)
+module.exports = mongoose.model("Test", schema)

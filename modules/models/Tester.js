@@ -9,4 +9,4 @@ const schema = Schema({
     tier: [[String]],
 });
 
-module.exports = mongoose.model("Module", schema)
+module.exports = mongoose.model("Tester", schema)

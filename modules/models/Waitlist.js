@@ -12,5 +12,4 @@ const schema = Schema({
     moduleId: String
 });
 
-
-module.exports = mongoose.model("Module", schema)
+module.exports = mongoose.model("Waitlist", schema)

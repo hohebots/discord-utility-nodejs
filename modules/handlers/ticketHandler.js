@@ -108,7 +108,7 @@ async function createTicket(interaction, modalResponse, ticketInfo) { // todo: m
         .setAuthor({ name: 'Ticket System', iconURL: 'https://i.imgur.com/jErEqVp.png'})
         .setDescription("Dein Ticket wurde erstellt!")
 
-    await interaction.reply({ embeds: [interactionSuccessEmbed], ephemeral: true})
+    await interaction.editReply({ embeds: [interactionSuccessEmbed], ephemeral: true}) // thissaringauinuagnu
 
 }
 

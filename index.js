@@ -55,7 +55,7 @@ start()
 
 
 // big refactor: give tickets and tests an id instead of passing all the bs arguments through a modal like a fucking retard ew
-
+// refactor: rename potentialModule to module in modulehandlers
 
 // refactor: move functions from info.js to util
 // refactor: split util/tickets.js to tickets.js and ticketBooths.js 

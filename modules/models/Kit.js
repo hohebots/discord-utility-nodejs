@@ -11,4 +11,4 @@ const schema = Schema({
 });
 
 
-module.exports = mongoose.model("Module", schema)
+module.exports = mongoose.model("Kit", schema)

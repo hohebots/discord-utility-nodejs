@@ -7,6 +7,7 @@ const { StringSelectMenuBuilder, EmbedBuilder, StringSelectMenuOptionBuilder, Ac
 const { ChannelType, PermissionsBitField, ButtonStyle } = require("discord.js")
 const log = require("../../util/log")
 const Waitlist = require("../models/Waitlist")
+const kits = require("./kits")
 
 async function createWaitlistChannel(category, moduleId) {
     // creates the channel
@@ -55,14 +56,12 @@ async function findWaitlist(moduleId) {
 
 async function sendWaitlistMessage(moduleId, mainChannel) {
     conf = await config.load()
-
     const select = new StringSelectMenuBuilder() // creates the select menu
         .setCustomId(moduleId)
         .setPlaceholder('Für welches Kit möchtest du einen Test anfragen?')
         
-    kits = await kits.getAll()
-    
-    Object.keys(kits).forEach(function(kit) {
+    allKits = await kits.getAll()
+    for (kit of allKits) {
         select.addOptions(
             new StringSelectMenuOptionBuilder()
                 .setLabel(kit.name)
@@ -70,7 +69,7 @@ async function sendWaitlistMessage(moduleId, mainChannel) {
                 .setEmoji({
                     id: kit.iconEmoji})
         );
-    })
+    }
 
     const row = new ActionRowBuilder()
         .addComponents(select);

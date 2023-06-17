@@ -23,10 +23,10 @@ async function setup(interaction) {
         type: ChannelType.GuildCategory,
     })
 
-    mainChannel = await waitlists.createWaitlistChannel(category, moduleId) // creates the ticket booth
-    waitlistMessage = await waitlists.sendWaitlistMessage(moduleId, mainChannel) // sends the ticket creation message
+    mainChannel = await waitlists.createWaitlistChannel(category, moduleId) // creates the waitlist channel
+    waitlistMessage = await waitlists.sendWaitlistMessage(moduleId, mainChannel) // sends the test creation message
 
-    // creates database entry for booth and ticket module
+    // creates database entry for tierlist module
     if (!modules.create(moduleId, "tierlist", moduleName, mainChannel.id, category.id)) {
         return false
     }
@@ -39,8 +39,7 @@ async function initTest(interaction, potentialModule) { // todo: make this prett
     const interactionUser = interaction.user
     const client = clientStorage.getClientInstance()
     const response = interaction.values[0]
-    const kit = kits.find(response)
-    const kitName = kit.name
+    const kit = await kits.find(response)
     const waitlist = await waitlists.find(potentialModule.id)
     const potentialTest = await tests.find(interactionUser.id, kit.id)
     
@@ -60,32 +59,60 @@ async function initTest(interaction, potentialModule) { // todo: make this prett
         await interaction.reply({ embeds: [TestAlreadyOpenEmbed], ephemeral: true})
         return
     }
-    const row = new ActionRowBuilder().addComponents(
+
+    const ingameNameRow = new ActionRowBuilder().addComponents(
         new TextInputBuilder()
             .setCustomId("ingameName")
             .setLabel("Was ist dein Minecraft ingame Name?")
             .setStyle("Short")
             .setMaxLength(16),
+    )
+    const estimatedTierRow = new ActionRowBuilder().addComponents(
         new TextInputBuilder()
             .setCustomId("estimatedTier")
-            .setLabel("In welchem Tier schätzt du dich ein? (S+ bis F-)")
+            .setLabel("In welchem Tier schätzt du dich? (S+ - F-)")
             .setStyle("Short")
             .setMaxLength(2)
     ) 
+            
+    
 
     const testCreationModal = new ModalBuilder()
-        .setCustomId('createTest-'+interactionUser.id+"-"+kit.id)
+        .setCustomId('createTest-'+interactionUser.id+"-"+waitlist.moduleId+"-"+kit.id)
         .setTitle('Warteschlange beitreten')
-        .addComponents(row)
+        .addComponents([ingameNameRow, estimatedTierRow])
 
     await interaction.showModal(testCreationModal)
 }
 
-async function createInactiveTest() {
+async function createInactiveTest(interaction, modalResponse, testInfo) { // todo: make this prettier
+    module = await modules.find(modalResponse[2])
+    waitlist = await waitlists.find(module.id)
+    client = clientStorage.getClientInstance()
+    const interactionUser = interaction.user
+    const guild = interaction.guild
+    const kit = kits.find(modalResponse[3])
+    const kitName = kit.name
     
+    
+    if (option == undefined) {
+        log.error("Miskonfiguration: Optionsname und Optionspfad müssen gleich sein. Behebe diesen Fehler und lade das Modul neu")
+        return
+    }
+
+    inactiveTest = await tests.create(module.id, interaction.id, kit.id, testInfo.getTextInputValue("estimatedTier"), testInfo.getTextInputValue("ingameName"))
+
+    const interactionSuccessEmbed = new EmbedBuilder()
+        .setColor(0x57F287) // discord green
+        .setTitle('Test eingetragen!')
+        .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/jErEqVp.png'})
+        .setDescription("Du wurdest der Tierlistwarteschlange hinzugefügt")
+
+    await interaction.editReply({ embeds: [interactionSuccessEmbed], ephemeral: true})
 }
 
 module.exports = {
     setup,
-    initTest
+    initTest,
+    createInactiveTest
 }

@@ -31,9 +31,7 @@ async function createTicketChannel(guild, moduleId, user, reason) {
         }]
     
 
-    permittedUsers = await permissions.getPermittedUsers(ticketBooth.viewPermissions) // gets all users with admin permission, use this function later when updating viewPermissions,
-                                                        // if new permission/group is added to user, check if permission is a view permission, if so - update overwrites
-                                                        // if new permission is added to group, check if permission is a view permission, if so - update overwrites
+    permittedUsers = await permissions.getPermittedUsers(ticketBooth.viewPermissions) 
     
     for (permittedUser of permittedUsers) {
         overwrites.push({
