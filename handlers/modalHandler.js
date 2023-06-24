@@ -29,8 +29,11 @@ async function handle(interaction) {
         await ticketHandler.createTicket(interaction, modalResponse, interaction.fields)     
     } else if (action == "createTest") {
         await tierlistHandler.createInactiveTest(interaction, modalResponse, interaction.fields)     
+    } else if (action == "finaliseTest") {
+        await tierlistHandler.enterTestResults(interaction, modalResponse, interaction.fields)     
     }
 }
+
 
 
 module.exports = {

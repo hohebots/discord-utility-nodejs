@@ -15,7 +15,7 @@ async function run(interaction) {
     // Usage example
     const projectPath = '../';
     const totalLines = countLinesInProject(projectPath);
-
+    
     // todo: finish this 
     const interactionSuccessEmbed = new EmbedBuilder()
         .setColor(0x57F287) // discord green

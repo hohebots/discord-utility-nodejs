@@ -9,7 +9,8 @@ const schema = Schema({
     kits: [String],
     mainChannel: String,
     waitlistMessage: String,
-    moduleId: String
+    moduleId: String,
+    testerStats: String
 });
 
 module.exports = mongoose.model("Waitlist", schema)

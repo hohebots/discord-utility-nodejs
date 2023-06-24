@@ -13,8 +13,10 @@ const schema = Schema({
     createdAt: String,
     acceptedAt: String,
     completedAt: String,
+    finalTier: String,
     finaliseTest: String,
-    moduleId: String
+    moduleId: String,
+    id: String
 });
 
 

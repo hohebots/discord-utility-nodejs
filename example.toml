@@ -1,33 +1,497 @@
 [settings]
 
+    [settings.git]
+        repo = "https://github.com/hohebots/discord-utility-nodejs.git"
+
     [settings.mongodb]
-        mongodb = "mongodb://localhost/bot"
+        instance = "mongodb://127.0.0.1:27017/thiaqu-modbot"
 
     [settings.auth]
-        clientId = "1234567891011121314"
-        guildId = "1234567891011121314"
-        token = "abcdefghijklmnopqrstuvwxyz1234567891011121314"
-        mongodb = "mongodb://localhost/bot"
+        clientId = "984924989239222334"
+        guildId = "985236897469173800"
+        token = "OTg0OTI0OTg5MjM5MjIyMzM0.G0CZA2.AoyOXr2smUbQ732OIQQlMmoHgZ6siaxSUWLBbA"
+        guildName = "Minecraft Lounge"
 
-    [settings.tickets]
+[modules]
 
+    [modules.tickets]
+        [modules.tickets.options]
+        
+            [modules.tickets.options.partner]
+                name = "partner"
+                label = "Partner Bewerbung"
+                description = "Bewerbe dich als Partner Servers"
+                emoji = "1114263363095109882"
+                [modules.tickets.options.partner.info]
+                
+                    [modules.tickets.options.partner.info.name]
+                        title = "Name"
+                        label = "Wie heisst dein Discord Server?"
+                        type = "Short"
+
+                    [modules.tickets.options.partner.info.description]
+                        title = "Beschreibung"
+                        label = "Beschreibe deinen Server kurz"
+                        type = "Paragraph"
+
+                    [modules.tickets.options.partner.info.invite]
+                        title = "Einladungslink"
+                        label = "Gebe den Discord Einladungslink an"
+                        type = "Short"
+
+            [modules.tickets.options.report]
+                name = "report"
+                label = "Report"
+                description = "Melde Nutzer/Systemfehler"
+                emoji = "1113870534820757504"
+                [modules.tickets.options.report.info]
+
+                    [modules.tickets.options.report.info.type]
+                        title = "Art"
+                        label = "Welche Art von Report möchtest du öffnen?"
+                        type = "Short"
+                    
+                    [modules.tickets.options.report.info.description]
+                        title = "Beschreibung"
+                        label = "Beschreibe deinen Report"
+                        type = "Paragraph"
+                        
+            [modules.tickets.options.team]
+                
+                name = "team"
+                label = "Team Bewerbung"
+                description = "Bewerbe dich als Teammitglied"
+                emoji = "1113895924176007200"
+                [modules.tickets.options.team.info]
+
+                    [modules.tickets.options.team.info.onlinetimes]
+                        title = "Onlinezeiten"
+                        label = "Zu welchen Zeiten bist du erreichbar?"
+                        type = "Short"
+
+                    [modules.tickets.options.team.info.age]
+                        title = "Alter"
+                        label = "Wie alt bist du?"
+                        type = "Short"
+
+                    [modules.tickets.options.team.info.motivation]
+                        title = "Grund"
+                        label = "Warum möchtest du dem Team beitreten?"
+                        type = "Paragraph"
+
+            [modules.tickets.options.support]
+                name = "support"
+                label = "Support"
+                description = "Genereller Support (Fragen, etc.)"
+                emoji = "1114263385421402122"
+                [modules.tickets.options.support.info]
+
+                    [modules.tickets.options.support.info.question]
+                        title = "Anliegen"
+                        label = "Was ist deine Frage/dein Anliegen?"
+                        type = "Paragraph"
 
 [commands]
 
-    [commands.ping]
-        name = "ping"
-        description = "Antwortet mit Pong!"
-        [commands.ping.subcommands]
-            [commands.ping.subcommands.create]
-                name = "latency"
-                description = "Gibt die Latenz des Bots zu Discord an"
-                autoComplete = true
-                [commands.ping.subcommands.create.choices]
-                    1 = "Choice 1"
-                    2 = "Choice 2"
-                    3 = "Choice 3"
-                    
+    [commands.setup]
 
-    [commands.helloworld]
-        name = "helloworld"
-        description = "Sagt hallo"
+        requiredPermissions = ["setup"]
+        disableResponseDeferring = true
+        name = "setup"
+        description = "Command zum einstellen von verschiedenen Funktionen."
+
+        [commands.setup.subcommands]
+
+            [commands.setup.subcommands.create]
+                name = "create"
+                description = "Erstellt "
+                
+                [commands.setup.subcommands.create.options]
+                    [commands.setup.subcommands.create.options.moduletype]
+                        name = "moduletype"
+                        description = "Welches Modul soll erstellt werden?"
+                        autoComplete = true
+                        isRequired = true
+                        [commands.setup.subcommands.create.options.moduletype.choices]
+                            tickets = "Ticket System"
+                            tierlist = "Tierlist"
+                            adminLog = "Admin-Log Kanal"
+                            giveaway = "Giveaway System"
+
+            [commands.setup.subcommands.delete]
+                name = "delete"
+                description = "Erstellt "
+                
+                [commands.setup.subcommands.delete.options]
+                    [commands.setup.subcommands.delete.options.module]
+                        name = "module"
+                        description = "Welches Modul soll erstellt werden?"
+                        autoComplete = true
+                        [commands.setup.subcommands.delete.options.module.choices]
+                            abc = "Ticket System"
+                            tierlist = "Tierlist"
+                            adminlog = "Admin-Log Kanal"
+             
+
+    [commands.benchmark]
+        requiredPermissions = ["runBenchmark"]
+        name = "benchmark"
+        description = "Bot Benchmark Optionen für Entwickler und Bot-Betreiber"
+         [commands.benchmark.subcommands.start]
+                name = "start"
+                description = "Startet ein Benchmark"
+                [commands.benchmark.subcommands.start.options]
+                    [commands.benchmark.subcommands.start.options.iterations]
+                        name = "iterations"
+                        description = "Wie oft soll das Benchmark wiederholt werden?"
+                        isRequired = true
+
+    [commands.ban]
+        requiredPermissions = ["ban"]
+        name = "ban"
+        description = "Bannt Nutzer"
+        [commands.ban.options]
+            [commands.ban.options.user]
+                name = "user"
+                type = "user"
+                description = "Welcher Nutzer soll betroffen sein?"
+                isRequired = true
+            [commands.ban.options.reason]
+                name = "reason"
+                description = "Was ist der Grund für diesen Bann?"
+                isRequired = true
+            [commands.ban.options.period]
+                name = "period"
+                description = "Wie lange soll dieser Bann gelten?"
+                isRequired = true
+                autoComplete = true
+                    [commands.ban.options.period.choices]
+                        24h = "24h"
+                        7d = "7d"
+                        4w = "4w"
+                        12mo = "12mo"
+                        10y = "10y"
+                        lifetime = "lifetime"
+            [commands.ban.options.deleteMessages]
+                name = "deletemessages"
+                description = "Wie weit in die Vergangenheit sollen die Nachrichten des Nutzers gelöscht werden (in Minuten)?"
+    
+    [commands.kick]
+        requiredPermissions = ["kick"]
+        name = "kick"
+        description = "Kickt Nutzer"
+        [commands.kick.options]
+            [commands.kick.options.user]
+                name = "user"
+                type = "user"
+                description = "Welcher Nutzer soll betroffen sein?"
+                isRequired = true
+            [commands.kick.options.reason]
+                name = "reason"
+                description = "Was ist der Grund für diesen Kick?"
+                isRequired = true
+
+            [commands.kick.options.deleteMessages]
+                name = "deletemessages"
+                description = "Wie weit in die Vergangenheit sollen die Nachrichten des Nutzers gelöscht werden (in Minuten)?"
+
+    [commands.user]
+        requiredPermissions = ["manageUsers"]
+        name = "user"
+        description = "Verwalte Nutzer in der Bot Datenbank"
+        [commands.user.subcommands.permission]
+            name = "permission"
+            description = "Verwaltet die Berechtigungen des Nutzers"
+            [commands.user.subcommands.permission.options]
+                
+                [commands.user.subcommands.permission.options.operation]
+                    name = "operation"
+                    description = "Welche Operation soll durchgeführt werden"
+                    autoComplete = true
+                    isRequired = true
+                        [commands.user.subcommands.permission.options.operation.choices]
+                            add = "add"
+                            remove = "remove"
+
+                [commands.user.subcommands.permission.options.user]
+                    name = "user"
+                    type = "user"
+                    description = "Welcher Nutzer soll betroffen sein?"
+                    isRequired = true
+
+                [commands.user.subcommands.permission.options.permission]
+                    name = "permission"
+                    autoComplete = true
+                    description = "Welche Permission soll betroffen sein?"
+                    isRequired = true
+
+        [commands.user.subcommands.group]
+            name = "group"
+            description = "Verwaltet die Gruppen des Nutzers"
+            [commands.user.subcommands.group.options]
+                
+                [commands.user.subcommands.group.options.operation]
+                    name = "operation"
+                    description = "Welche Operation soll durchgeführt werden"
+                    autoComplete = true
+                    isRequired = true
+                        [commands.user.subcommands.group.options.operation.choices]
+                            add = "add"
+                            remove = "remove"
+
+                [commands.user.subcommands.group.options.user]
+                    name = "user"
+                    type = "user"
+                    description = "Welcher Nutzer soll betroffen sein?"
+                    isRequired = true
+
+                [commands.user.subcommands.group.options.group]
+                    name = "group"
+                    autoComplete = true
+                    description = "Welche Gruppe soll betroffen sein?"
+                    isRequired = true
+
+
+
+    [commands.permission]
+        requiredPermissions = ["managePermissions"]
+        name = "permission"
+        description = "Bot Permissions"
+        [commands.permission.subcommands.create]
+            name = "create"
+            description = "Erstellt eine Permission"
+            [commands.permission.subcommands.create.options]
+
+                [commands.permission.subcommands.create.options.name]
+                    name = "name"
+                    description = "Wie soll die Permission heissen?"
+
+                [commands.permission.subcommands.create.options.id]
+                    name = "id"
+                    description = "Was soll die Permission ID sein?"
+
+                [commands.permission.subcommands.create.options.description]
+                    name = "description"
+                    description = "Was soll die Permission Beschreibung sein?"
+                
+                
+                [commands.permission.subcommands.delete]
+                    name = "delete"
+                    description = "Erstellt eine Permission"
+                    [commands.permission.subcommands.delete.options]
+
+                        [commands.permission.subcommands.delete.options.id]
+                            name = "id"
+                            description = "Welche Permission möchtest du löschen?"
+        
+
+
+
+
+
+
+
+   [commands.group]
+        requiredPermissions = ["manageGroups"]
+        name = "group"
+        description = "Verwalte Gruppen in der Bot Datenbank"
+        [commands.group.subcommands.create]
+            name = "create"
+            description = "Erstellt eine neue Gruppe"
+            [commands.group.subcommands.create.options]
+                
+                [commands.group.subcommands.create.options.id]
+                    name = "id"
+                    description = "Welche ID soll diese Gruppe tragen?"
+                    isRequired = true
+
+                [commands.group.subcommands.create.options.name]
+                    name = "name"
+                    description = "Welchen Namen soll die Gruppe?"
+                    isRequired = true
+
+
+        [commands.group.subcommands.delete]
+            name = "delete"
+            description = "Löscht eine Gruppe"
+            [commands.group.subcommands.delete.options]
+                
+                [commands.group.subcommands.delete.options.group]
+                    name = "group"
+                    description = "Welche Gruppe soll gelöscht werden"
+                    autoComplete = true
+                    isRequired = true
+
+        [commands.group.subcommands.info]
+            name = "info"
+            description = "Zeit Informationen über eine Gruppe"
+            [commands.group.subcommands.info.options]
+                
+                [commands.group.subcommands.info.options.group]
+                    name = "group"
+                    description = "Welche Gruppe soll betroffen sein?"
+                    autoComplete = true
+                    isRequired = true
+
+        [commands.group.subcommands.link]
+            name = "link"
+            description = "Verbindet Gruppen mit Discord Rollen"
+       
+            [commands.group.subcommands.link.options]
+                    
+                [commands.group.subcommands.link.options.group]
+                    name = "group"
+                    description = "Welche Gruppe soll betroffen sein"
+                    autoComplete = true
+                    isRequired = true
+
+                [commands.group.subcommands.link.options.role]
+                    name = "role"
+                    type = "role"
+                    description = "Welche Rolle soll betroffen sein?"
+                    isRequired = true
+                    autoComplete = true
+
+            
+        [commands.group.subcommands.permission]
+            name = "permission"
+            description = "Bearbeitet die Gruppenberechtigungen"
+       
+            [commands.group.subcommands.permission.options]
+                    
+                [commands.group.subcommands.permission.options.operation]
+                    name = "operation"
+                    description = "Welche Operation soll durchgeführt werden"
+                    autoComplete = true
+                    isRequired = true
+                        [commands.group.subcommands.permission.options.operation.choices]
+                            add = "add"
+                            remove = "remove"
+
+                [commands.group.subcommands.permission.options.group]
+                    name = "group"
+                    description = "Welche Gruppe soll betroffen sein?"
+                    isRequired = true
+                    autoComplete = true
+
+                [commands.group.subcommands.permission.options.permission]
+                    name = "permission"
+                    autoComplete = true
+                    description = "Welche Permission soll betroffen sein?"
+                    isRequired = true
+
+                [commands.group.subcommands.rename]
+                    name = "rename"
+                    description = "Benennt eine Permission um"
+                    [commands.group.subcommands.rename.options]
+
+                        [commands.group.subcommands.rename.options.group]
+                            name = "group"
+                            isRequired = true
+                            autoComplete = true
+                            description = "Welche Gruppe möchtest du umbennenen?"
+
+                        [commands.group.subcommands.rename.options.name]
+                            name = "name"
+                            isRequired = true
+                            description = "Welchen Namen soll die Gruppe haben?"
+
+                [commands.group.subcommands.unlink]
+                    name = "unlink"
+                    description = "Entbindet eine Gruppe"
+                    [commands.group.subcommands.unlink.options]
+
+                        [commands.group.subcommands.unlink.options.group]
+                            name = "group"
+                            isRequired = true
+                            autoComplete = true
+                            description = "Welche Gruppe möchtest du entbinden?"
+
+    [commands.tickets]
+        requiredPermissions = ["manageTicketsModule"]
+        name = "tickets"
+        description = "Verschiedenste Commands für die Verwaltung des Ticketsystems."
+        [commands.tickets.subcommands]
+            [commands.tickets.subcommands.reload]
+                    name = "reload"
+                    description = "Läd ein Modul neu"
+                    [commands.tickets.subcommands.reload.options]
+
+                        [commands.tickets.subcommands.reload.options.module]
+                            name = "module"
+                            isRequired = true
+                            autoComplete = true
+                            description = "Welche Modul soll neugeladen werden?"
+
+            [commands.tickets.subcommands.permissions]
+                    name = "permissions"
+                    description = "Bearbeitet die Berechtigungen des Moduls"
+                    [commands.tickets.subcommands.permissions.options]
+
+                        [commands.tickets.subcommands.permissions.options.module]
+                            name = "module"
+                            isRequired = true
+                            autoComplete = true
+                            description = "Welche Modul soll bearbeitet werden?"
+
+                        [commands.tickets.subcommands.permissions.options.operation]
+                            name = "operation"
+                            isRequired = true
+                            autoComplete = true
+                            description = "Welche Operation soll durchgeführt werden?"
+                            [commands.tickets.subcommands.permissions.options.operation.choices]
+                                add = "add"
+                                remove = "remove"
+
+                        [commands.tickets.subcommands.permissions.options.permissiontype]
+                            name = "permissiontype"
+                            isRequired = true
+                            autoComplete = true
+                            description = "Welche Berechtigung soll verändert werden?"
+                            [commands.tickets.subcommands.permissions.options.permissiontype.choices]
+                                view = "view"
+                                open = "open"
+                                close = "close"
+                        
+                        [commands.tickets.subcommands.permissions.options.permission]
+                            name = "permission"
+                            isRequired = true
+                            autoComplete = true
+                            description = "Welche Berechtigung soll hinzugefügt werden?"
+
+
+    [commands.info]
+        name = "info"
+        description = "Info Command"
+
+    [commands.nuke]
+        requiredPermissions = ["admin"]
+        name = "nuke"
+        description = "Nuke Command"
+        
+    [commands.reload]
+        requiredPermissions = ["admin"]
+        name = "reload"
+        description = "Reload Command"
+        
+[permissions]
+
+    [permissions.admin]
+        name = "Admin"
+        description = "Admin Rechte"
+        id = "admin"
+
+    [permissions.viewTickets]
+        name = "Tickets einsehen"
+        description = "Erlaubt Nutzern Tickets einzusehen"
+        id = "viewTickets"
+
+    [permissions.closeTicket]
+        name = "Tickets schliessen"
+        description = "Erlaubt Nutzern Tickets zu schliessen"
+        id = "closeTickets"
+
+    [permissions.abc]
+        name = "abc"
+        description = "asdasd Rechte"
+        id = "abc"

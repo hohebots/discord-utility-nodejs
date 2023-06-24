@@ -3,6 +3,7 @@ const { SelectMenuBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilde
 const permissions = require('../permissions/permissions.js');
 const log = require('../util/log.js');
 const randomstring = require('randomstring');
+const giveawayHandler = require("../modules/handlers/giveawayHandler.js")
 
 async function run(interaction) {
     if (interaction.options.getSubcommand() == "create") {
@@ -49,7 +50,9 @@ async function run(interaction) {
             tierlistCreationModal.addComponents(row)
             
             await interaction.showModal(tierlistCreationModal)
-        }   
+        } else if (module == "giveaway") {
+            await giveawayHandler.tempSetup(interaction)
+        }  
     }
 }
 

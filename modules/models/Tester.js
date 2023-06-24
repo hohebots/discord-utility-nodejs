@@ -5,8 +5,7 @@ const schema = Schema({
     id: String,
     name: String,
     testPoints: String,
-    estimatedTier: String,
-    tier: [[String]],
+    tier: [[String]]
 });
 
 module.exports = mongoose.model("Tester", schema)

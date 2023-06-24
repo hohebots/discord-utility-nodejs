@@ -15,9 +15,9 @@ const config = require("../util/config.js")
 const moduleCommandHandler = require("./moduleCommandHandler.js")
 const info = require("../commands/info.js")
 const ban = require("../commands/ban/index.js")
+const nuke = require("../commands/nuke")
 const kick = require("../commands/kick/index.js")
 const reload = require("../commands/reload/index.js")
-
 
 async function handle(interaction) {
     conf = await config.load()
@@ -25,7 +25,6 @@ async function handle(interaction) {
         if (!conf.commands[interaction.commandName].disableResponseDeferring) {
             await interaction.deferReply({ephemeral: true});
         } 
-        
         if (await permissions.check(interaction.user.id, await permissions.getCommandPermissions(interaction.commandName))) {
             const command = interaction.commandName
             log.info("Command " + command + " wird ausgeführt")
@@ -45,6 +44,8 @@ async function handle(interaction) {
                     await ban.run(interaction)
                 } else if (command == "kick") {
                     await kick.run(interaction)
+                } else if (command == "nuke") {
+                    await nuke.run(interaction)
                 } else if (command == "reload") {
                     await reload.run(interaction)
                 } else if (conf.modules[command]){
@@ -59,9 +60,6 @@ async function handle(interaction) {
         } else {
             await missingPermissions.run(interaction)
         }
-  
-
-
     } else if (interaction.isAutocomplete()) {
         try {
             await autoCompleteHandler.handle(interaction)
@@ -78,11 +76,9 @@ async function handle(interaction) {
         }
 
     } else if (interaction.isStringSelectMenu()) {
-        try {
+       
             await selectionHandler.handle(interaction)
-        } catch (e){
-            log.error("Fehler bei Selection request " + e)
-        }
+        
     
     } else if (interaction.isButton()) {
         try {

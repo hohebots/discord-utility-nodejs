@@ -56,7 +56,11 @@ start()
 
 // big refactor: give tickets and tests an id instead of passing all the bs arguments through a modal like a fucking retard ew
 // refactor: rename potentialModule to module in modulehandlers
+// todo: redo giveaways
+// todo: implement verifying if a user is still in guild when accepting test
+// todo: remove users from waitlist on leave
 
+// todo: help commands
 // refactor: move functions from info.js to util
 // refactor: split util/tickets.js to tickets.js and ticketBooths.js 
 // refactor: rename permissions directory

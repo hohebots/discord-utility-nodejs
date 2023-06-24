@@ -12,10 +12,8 @@ const missingPermissions = require("../../commands/missingPermissions.js")
 
 
 async function setup(interaction) {
-
     const moduleId = randomstring.generate(10)
     const moduleName = interaction.fields.getTextInputValue('name')
-
     const guild = interaction.guild
     
     // creates category and main channel
@@ -158,7 +156,7 @@ async function claimTicket(buttonResponse, interaction) {
         const ticketClaimedEmbed = new EmbedBuilder()
             .setColor(0x57F287) // discord green
             .setTitle('Ticket wurde beansprucht')
-            .setAuthor({ name: interaction.user.username, iconURL: "https://cdn.discordapp.com/avatars/"+user.id+"/"+user.avatar+".png"})
+            .setAuthor({ name: interaction.user.username, iconURL: "https://i.imgur.com/pKsq653.png"})
             .setDescription("Dieses Ticket wurde von " + interaction.user.username + " beansprucht")
 
         await interaction.reply({ embeds: [ticketClaimedEmbed]})

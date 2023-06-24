@@ -197,7 +197,7 @@ async function sendBoothMessage(moduleId, mainChannel) {
     conf = await config.load()
 
     const select = new StringSelectMenuBuilder() // creates the select menu
-        .setCustomId(moduleId)
+        .setCustomId(moduleId+"-createTicket")
         .setPlaceholder('Wähle einen Grund für das Ticket aus')
         
     options = conf.modules.tickets.options

@@ -3,11 +3,13 @@ const modules = require("./modules")
 const permissions = require("../../permissions/permissions")
 const TicketBooth = require("../models/TicketBooth")
 const config = require("../../util/config")
-const { StringSelectMenuBuilder, EmbedBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ButtonBuilder } = require("@discordjs/builders")
+const { StringSelectMenuBuilder, EmbedBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ButtonBuilder, channelLink } = require("@discordjs/builders")
 const { ChannelType, PermissionsBitField, ButtonStyle } = require("discord.js")
 const log = require("../../util/log")
 const Waitlist = require("../models/Waitlist")
 const kits = require("./kits")
+const testers = require("./testers")
+
 
 async function createWaitlistChannel(category, moduleId) {
     // creates the channel
@@ -40,13 +42,74 @@ async function createWaitlist(moduleId, channelId) {
             kits: [],
             mainChannel: channelId,
             waitlistMessage: "0",
-            moduleId: moduleId})
+            moduleId: moduleId,
+            testerStats: "0"})
             waitlist.save().then(() => log.info("MongoDB: Waitlist " + moduleId + " erstellt"))
         return true
     } else {
         log.warn("MongoDB: Waitlist " + moduleId + " konnte nicht erstellt werden. Existiert bereits")
         return false
     }
+}
+
+async function setTesterStats(moduleId, channelId) {
+    waitlist = await find(moduleId)
+    waitlist.testerStats = channelId
+    waitlist.save()
+}
+
+async function refreshTesterStatsPerms(channel) {
+    overwritePerms = [{
+        id: guild.id,
+        deny: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
+    }]
+
+    for (tester of await testers.getAll()) {
+        overwritePerms.push({
+            id: tester.id,
+            allow: [PermissionsBitField.Flags.ViewChannel],
+        })
+    }
+
+    channel.permissionOverwrites.set(overwritePerms)
+}
+
+async function createTesterStatsChannel(category, moduleId) {
+    // creates the channel
+    guild = category.guild
+    testerStatsChannel = await guild.channels.create({
+        name: "tester-stats",
+        type: ChannelType.GuildText,
+        parent: category.id
+    })
+
+    // creates database entry for this booth
+    await refreshTesterStatsPerms(testerStatsChannel)
+    await setTesterStats(moduleId, testerStatsChannel.id)
+    await sendTesterStats(testerStatsChannel)
+    return mainChannel
+}
+
+async function sendTesterStats(moduleId, guild) {
+    waitlist = await find(moduleId)
+    testerStats = waitlist.testerStats
+    testerStatsChannel = await guild.channels.fetch(testerStats)
+    testerList = ""
+    allTesters = await testers.getAll()
+    allTestersOrdered = allTesters.sort((a, b) => parseInt(a.testPoints) - parseInt(b.testPoints));
+    fetched = await testerStatsChannel.messages.fetch({limit: 100});
+    testerStatsChannel.bulkDelete(fetched);
+    allTestersOrdered = allTestersOrdered.reverse()
+    for (let i = 0; i < allTestersOrdered.length; i++) {
+        testerList = testerList + i + ". " + allTestersOrdered[i].name + " " + allTestersOrdered[i].testPoints + "\n"
+    }
+    const testerStatsEmbed = new EmbedBuilder()
+        .setColor(0xFFFFFF ) // white
+        .setTitle('**Tester Hall Of Fame**')
+        .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/5JILqgw.png'})
+        .setDescription(`Hier werden alle Tester mit der Anzahl ihrer abgeschlossenen Tests angezeigt.`)
+        .addFields({ name: "Tester", value: testerList })
+    message = await testerStatsChannel.send({ embeds: [testerStatsEmbed]})
 }
 
 async function findWaitlist(moduleId) {
@@ -57,7 +120,7 @@ async function findWaitlist(moduleId) {
 async function sendWaitlistMessage(moduleId, mainChannel) {
     conf = await config.load()
     const select = new StringSelectMenuBuilder() // creates the select menu
-        .setCustomId(moduleId)
+        .setCustomId(moduleId+"-joinWaitlist")
         .setPlaceholder('Für welches Kit möchtest du einen Test anfragen?')
         
     allKits = await kits.getAll()
@@ -107,5 +170,7 @@ async function find(moduleId) {
 module.exports = {
     sendWaitlistMessage,
     createWaitlistChannel,
-    find
+    find,
+    createTesterStatsChannel,
+    sendTesterStats
 }
