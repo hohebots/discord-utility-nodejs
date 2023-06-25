@@ -4,13 +4,13 @@
         repo = "https://github.com/hohebots/discord-utility-nodejs.git"
 
     [settings.mongodb]
-        instance = "mongodb://127.0.0.1:27017/thiaqu-modbot"
+        instance = "mongodb://127.0.0.1:27017/mongodbdatabase"
 
     [settings.auth]
-        clientId = "984924989239222334"
-        guildId = "985236897469173800"
-        token = "OTg0OTI0OTg5MjM5MjIyMzM0.G0CZA2.AoyOXr2smUbQ732OIQQlMmoHgZ6siaxSUWLBbA"
-        guildName = "Minecraft Lounge"
+        clientId = "bot user id here"
+        guildId = "guild id here"
+        token = "discord token here"
+        guildName = "guild name here"
 
 [modules]
 

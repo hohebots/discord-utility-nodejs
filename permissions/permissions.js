@@ -69,7 +69,7 @@ async function getPermittedUsers(perms) {
     client = clientStorage.getClientInstance()
     conf = await config.load()
     guildId = conf.settings.auth.guildId
-    guild = client.guilds.cache.get(guildId)
+    guild = client.guilds.fetch(guildId)
     allUsers = await baseUserUtil.getAll()
     permittedUsers = [] 
     

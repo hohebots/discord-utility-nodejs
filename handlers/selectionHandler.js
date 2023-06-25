@@ -6,7 +6,6 @@ async function handle(interaction) {
     selectionResponse = interaction.customId.split("-")
     interactionModule = await modules.find(selectionResponse[0])
     action = selectionResponse[1]
-    console.log(selectionResponse)
 
     if (interactionModule != null) {
         if (interactionModule.type == "tickets"){

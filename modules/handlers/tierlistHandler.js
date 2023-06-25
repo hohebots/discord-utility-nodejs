@@ -58,7 +58,7 @@ async function showTestOptions(interaction, potentialModule) {
         const TestAlreadyOpenEmbed = new EmbedBuilder()
             .setColor(0xED4245) // discord red
             .setTitle('Test nicht gefunden')
-            .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/Fqlf9Hg.png'})
+            .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/5JILqgw.png'})
             .setDescription('Dieser Test existiert nicht')
 
         await interaction.reply({ embeds: [TestAlreadyOpenEmbed], ephemeral: true})
@@ -68,7 +68,7 @@ async function showTestOptions(interaction, potentialModule) {
     const testOptionsEmbed = new EmbedBuilder()
             .setColor(0xFFFFFF) // white
             .setTitle('Test Verwaltung')
-            .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/Fqlf9Hg.png'})
+            .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/5JILqgw.png'})
 
     const denyTestButton = new ButtonBuilder()
         .setCustomId('denyTest-'+test.id)
@@ -110,7 +110,7 @@ async function initTest(interaction, potentialModule) { // todo: make this prett
             const TestAlreadyOpenEmbed = new EmbedBuilder()
                 .setColor(0xED4245) // discord red
                 .setTitle('Du hast bereits einen offenen Test')
-                .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/Fqlf9Hg.png'})
+                .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/5JILqgw.png'})
                 .setDescription('Du hast bereits einen offenen Test mit diesem Kit')
 
             await interaction.reply({ embeds: [TestAlreadyOpenEmbed], ephemeral: true})
@@ -130,7 +130,7 @@ async function initTest(interaction, potentialModule) { // todo: make this prett
             .setCustomId("estimatedTier")
             .setLabel("In welchem Tier schätzt du dich? (S+ - F-)")
             .setStyle("Short")
-            .setMaxLength(2)
+            .setMaxLength(3)
     ) 
 
     const testCreationModal = new ModalBuilder()
@@ -161,8 +161,7 @@ async function setTester(interaction, potentialModule) {
     
     await tests.setState(testId, "active")
     await testAcceptionChannels.updateAcceptMessage(potentialModule.id)
-
-    if (test.testChannel == "0") {
+if (test.testChannel == "0") {
         testChannel = await tests.createTestChannel(testId, interaction.guild, testerId) 
     } else {
         testChannel = await interaction.guild.channels.fetch(test.testChannel)
@@ -217,9 +216,39 @@ async function setTester(interaction, potentialModule) {
     const interactionSuccessEmbed = new EmbedBuilder()
             .setColor(0xFFFFFF) // white
             .setTitle('Test angenommen')
-            .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/jErEqVp.png'})
+            .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/5JILqgw.png'})
             .setDescription("Der Test wurde angenommen.")
     await interaction.reply({ embeds: [interactionSuccessEmbed], ephemeral: true})
+    
+
+    const testCreationUserEmbed = new EmbedBuilder()
+        .setColor(0xFFFFFF) // white
+        .setTitle('Dein Test wurde angenommen!')
+        .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/5JILqgw.png'})
+        .setDescription("Dein Test wurde gestartet! Schreibe hier mit deinem Tester: " + testChannel.url)
+    const testCreationTesterEmbed = new EmbedBuilder()
+        .setColor(0xFFFFFF) // white
+        .setTitle('Dir wurde ein Test zugewiesen!')
+        .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/5JILqgw.png'})
+        .setDescription("Der Test wurde gestartet! " + testChannel.url)
+    try {
+        await client.users.send(test.user, {embeds: [testCreationUserEmbed]});
+    } catch {
+    }
+    try {
+        await client.users.send(testerId, {embeds: [testCreationTesterEmbed]});
+    } catch {
+
+    }
+     
+    for (inactiveTest of await tests.getAllInactive()) {
+        try {
+            tests.sendPositionChange(inactiveTest.id, potentialModule.id)
+        } catch (e) {
+            log.error("Konnte Positions Benachrichtigung nicht updaten: " + e)
+        }
+        
+    }
 }
 
 async function rejectTest(interaction) {
@@ -294,7 +323,7 @@ async function finishTest(interaction) {
             .setCustomId("finalTier")
             .setLabel("Welches Tier hat dieser Nutzer?")
             .setStyle("Short")
-            .setMaxLength(2),
+            .setMaxLength(3),
     )
     const ingameNameRow = new ActionRowBuilder().addComponents(
         new TextInputBuilder()
@@ -333,11 +362,27 @@ async function createInactiveTest(interaction, modalResponse, testInfo) { // tod
     module = await modules.find(modalResponse[2])
     waitlist = await waitlists.find(module.id)
     client = clientStorage.getClientInstance()
+    allInactiveTests = await tests.getAllInactive()
     const interactionUser = interaction.user
     const guild = interaction.guild
     const kit = await kits.find(modalResponse[3])
-    const kitName = kit.name    
     
+    if(!await tests.checkTierValidity(testInfo.getTextInputValue("estimatedTier"))){
+        const interactionFailEmbed = new EmbedBuilder()
+            .setColor(0xED4245) // discord red
+            .setTitle('Test konnte nicht erstellt werden')
+            .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/5JILqgw.png'})
+            .setDescription("Dein Test konnte nicht erstellt werden, weil das angegebene Tier nicht existiert. Wähle eines der folgenden:")
+            .addFields({ 
+                name: 'Tiers:',
+                value: "S+ So S- HT1 LT1\nA+ Ao A- HT2 LT2\nB+ Bo B- HT3 LT3\nC+ Co C- HT4 LT4\nD+ Do D- HT5 LT5\nE+ Eo E-\nF+ Fo F-",
+                inline: true})
+          
+
+        await interaction.editReply({ embeds: [interactionFailEmbed], ephemeral: true})
+        return
+    }
+
     if (option == undefined) {
         log.error("Miskonfiguration: Optionsname und Optionspfad müssen gleich sein. Behebe diesen Fehler und lade das Modul neu")
         return
@@ -345,13 +390,30 @@ async function createInactiveTest(interaction, modalResponse, testInfo) { // tod
     inactiveTest = await tests.create(module.id, interaction.user.id, kit.id, testInfo.getTextInputValue("estimatedTier"), testInfo.getTextInputValue("ingameName"))
 
     const interactionSuccessEmbed = new EmbedBuilder()
-        .setColor(0x57F287) // discord green
+        .setColor(0xFFFFFF)
         .setTitle('Test eingetragen!')
-        .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/jErEqVp.png'})
+        .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/5JILqgw.png'})
         .setDescription("Du wurdest der Tierlistwarteschlange hinzugefügt")
-
-    await testAcceptionChannels.updateAcceptMessage(module.id)
+        
+    
     await interaction.editReply({ embeds: [interactionSuccessEmbed], ephemeral: true})
+    await testAcceptionChannels.updateAcceptMessage(module.id)
+    const positionDMModal = new EmbedBuilder()
+        .setColor(0xFFFFFF)
+        .setTitle('Du bist nun in der Tierlist-Warteschlange!')
+        .addFields({ 
+            name: 'Position in der Warteschlange: ',
+            value: allInactiveTests.length.toString()})
+        .addFields({ 
+            name: 'Kit:',
+            value: kit.name})
+        .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/5JILqgw.png'})
+    try {
+        positionDM = await client.users.send(user.id, {embeds: [positionDMModal]});
+        tests.setPositionDM(testId, positionDM.id)
+    } catch {
+    }
+    
 }
 
 async function acceptTest(interaction) {
@@ -363,7 +425,7 @@ async function acceptTest(interaction) {
         const testNotInactive = new EmbedBuilder()
             .setColor(0xFFFFFF) // white
             .setTitle('Test ist bereits aktiv!')
-            .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/jErEqVp.png'})
+            .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/5JILqgw.png'})
             .setDescription("Dieser Test konnte nicht angenommen werden, da er bereits existiert.")
 
             await interaction.reply({ embeds: [testNotInactive], ephemeral: true})
@@ -379,9 +441,9 @@ async function denyTest(interaction) {
     test = await tests.get(testId)
     tests.deny(testId)
     const interactionSuccessEmbed = new EmbedBuilder()
-        .setColor(0xFFFFFF) // white
+        .setColor(0xED4245) // red
         .setTitle('Test abgelehnt!')
-        .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/jErEqVp.png'})
+        .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/5JILqgw.png'})
         .setDescription("Test wurde abgelehnt.")   
     testAcceptionChannels.updateAcceptMessage(test.moduleId)
     await interaction.reply({ embeds: [interactionSuccessEmbed], ephemeral: true})

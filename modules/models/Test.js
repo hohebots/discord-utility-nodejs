@@ -16,7 +16,8 @@ const schema = Schema({
     finalTier: String,
     finaliseTest: String,
     moduleId: String,
-    id: String
+    id: String,
+    positionDM: String
 });
 
 

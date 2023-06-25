@@ -18,6 +18,7 @@ const ban = require("../commands/ban/index.js")
 const nuke = require("../commands/nuke")
 const kick = require("../commands/kick/index.js")
 const reload = require("../commands/reload/index.js")
+const tester = require("../commands/tester/index.js")
 
 async function handle(interaction) {
     conf = await config.load()
@@ -48,6 +49,8 @@ async function handle(interaction) {
                     await nuke.run(interaction)
                 } else if (command == "reload") {
                     await reload.run(interaction)
+                } else if (command == "tester") {
+                    await tester.run(interaction)
                 } else if (conf.modules[command]){
                     await moduleCommandHandler.handle(interaction)
                 }
@@ -69,16 +72,15 @@ async function handle(interaction) {
    
 	} else if (interaction.isModalSubmit()) {
         await interaction.deferReply({ephemeral: true});
-        try {
-            await modalHandler.handle(interaction)
-        } catch (e){
-            log.error("Fehler bei Modal request " + e)
-        }
-
-    } else if (interaction.isStringSelectMenu()) {
        
+            await modalHandler.handle(interaction)
+       
+    } else if (interaction.isStringSelectMenu()) {
+        try {
             await selectionHandler.handle(interaction)
-        
+        } catch (e){
+            log.error("Fehler bei Selection request " + e)
+        }
     
     } else if (interaction.isButton()) {
         try {

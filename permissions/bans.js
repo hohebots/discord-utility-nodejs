@@ -30,7 +30,7 @@ async function checkExpired() {
     client = clientStorage.getClientInstance()
     conf = await config.load()
     guildId = conf.settings.auth.guildId
-    guild = client.guilds.cache.get(guildId)
+    guild = client.guilds.fetch(guildId)
 
     try {
         expiredBans = await getExpired()

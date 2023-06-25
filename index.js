@@ -4,6 +4,8 @@ const config = require("./util/config.js");
 const database = require("./permissions/database.js")
 const permissions = require("./permissions/permissions.js")
 const handler = require("./handlers/commandHandler.js")
+const memberLeaveHandler = require("./handlers/memberLeaveHandler.js")
+
 const bans = require("./permissions/bans.js")
 const clientStorage = require("./util/client.js")
 const { Client, GatewayIntentBits } = require("discord.js")
@@ -25,22 +27,32 @@ async function start() {
     database.connect()
     database.startLogger()
     permissions.initPresetPermissions()
-    await bans.startCheckExpiredTask()
+    guild = await client.guilds.fetch(settings.guildId)
 
+    await bans.startCheckExpiredTask()
+    
     client.once('ready', () => {
         log.info("Bot wurde gestartet.")
         clientStorage.setClientInstance(client)
+        guild.roles.fetch()
+        guild.channels.fetch()
+        guild.members.fetch()
     });
 
     client.on('interactionCreate', async interaction => {
-        await interaction.guild.roles.fetch()
-        await interaction.guild.channels.fetch()
-        await interaction.guild.members.fetch()
-        await handler.handle(interaction)
+        try {
+            await handler.handle(interaction)
+        } catch (e){
+            log.error(e)
+        }
+        
+        interaction.guild.roles.fetch()
+        interaction.guild.channels.fetch()
+        interaction.guild.members.fetch()
     })
     
     client.on('guildMemberRemove', async member => { // use this to check if tierlist user has left
-
+        await memberLeaveHandler.handle(member)
     });
     
     ;}

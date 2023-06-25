@@ -65,12 +65,15 @@ async function refreshTesterStatsPerms(channel) {
     }]
 
     for (tester of await testers.getAll()) {
-        overwritePerms.push({
-            id: tester.id,
-            allow: [PermissionsBitField.Flags.ViewChannel],
-        })
-    }
-
+        try {
+            await channel.guild.members.fetch(tester.id)
+            overwritePerms.push({
+                id: tester.id,
+                allow: [PermissionsBitField.Flags.ViewChannel],
+            })
+        } catch {}
+    } 
+    
     channel.permissionOverwrites.set(overwritePerms)
 }
 
@@ -86,15 +89,18 @@ async function createTesterStatsChannel(category, moduleId) {
     // creates database entry for this booth
     await refreshTesterStatsPerms(testerStatsChannel)
     await setTesterStats(moduleId, testerStatsChannel.id)
-    await sendTesterStats(testerStatsChannel)
+    await find(moduleId)
+    await sendTesterStats(moduleId, guild)
     return mainChannel
 }
 
 async function sendTesterStats(moduleId, guild) {
     waitlist = await find(moduleId)
+  
     testerStats = waitlist.testerStats
+    
     testerStatsChannel = await guild.channels.fetch(testerStats)
-    testerList = ""
+    testerList = "\n"
     allTesters = await testers.getAll()
     allTestersOrdered = allTesters.sort((a, b) => parseInt(a.testPoints) - parseInt(b.testPoints));
     fetched = await testerStatsChannel.messages.fetch({limit: 100});
@@ -107,7 +113,8 @@ async function sendTesterStats(moduleId, guild) {
         .setColor(0xFFFFFF ) // white
         .setTitle('**Tester Hall Of Fame**')
         .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/5JILqgw.png'})
-        .setDescription(`Hier werden alle Tester mit der Anzahl ihrer abgeschlossenen Tests angezeigt.`)
+        .setDescription(`Rangliste mit allen Testern, nach Testpunkten.\n
+        Verdiene Testpunkte durch Tests!`)
         .addFields({ name: "Tester", value: testerList })
     message = await testerStatsChannel.send({ embeds: [testerStatsEmbed]})
 }
@@ -139,9 +146,9 @@ async function sendWaitlistMessage(moduleId, mainChannel) {
 
     // sends the waitlistMessage
     const joinWaitlistEmbed = new EmbedBuilder()
-        .setColor(0x000000 ) // black
+        .setColor(0xFFFFFF ) // black
         .setTitle('**Tiertest Beantragen**')
-        .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/ZqUCHT7.png'})
+        .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/5JILqgw.png'})
         .setDescription(`Benutze das Menü um der Warteschlange beizutreten.`)
 
     message = await mainChannel.send({ embeds: [joinWaitlistEmbed], components: [row]})

@@ -118,7 +118,7 @@ async function closeTicket(buttonResponse, interaction) {
     
     guild = interaction.guild
     ticket = await tickets.find(userId, reason, moduleId)
-    ticketChannel = await guild.channels.cache.get(ticket.channel)
+    ticketChannel = await guild.channels.fetch(ticket.channel)
     ticketBooth = await tickets.findBooth(moduleId)
 
     if (await permissions.check(interaction.user.id, ticketBooth.closePermissions)) {
@@ -137,7 +137,7 @@ async function claimTicket(buttonResponse, interaction) {
     guild = interaction.guild
     client = await clientStorage.getClientInstance()
     ticket = await tickets.find(userId, reason, moduleId)
-    ticketChannel = await guild.channels.cache.get(ticket.channel)
+    ticketChannel = await guild.channels.fetch(ticket.channel)
     ticketBooth = await tickets.findBooth(moduleId)
 
     if (await permissions.check(interaction.user.id, ticketBooth.viewPermissions)) {

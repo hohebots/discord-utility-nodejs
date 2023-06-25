@@ -7,6 +7,21 @@ async function find(id) {
     return tester
 }
 
+async function create(id, tier, name, kit) {
+    if (await find(id) == null) {
+        const tester = new Tester({id: id, name: name, tier: [[kit, tier]], testPoints: "0"})
+        await tester.save()
+        log.info("MongoDB: Tester " + name + " erstellt")
+        return true
+    } else {
+        tester = await find(id)
+        tester.tier.push([kit,tier])
+        tester.save()
+        log.warn("MongoDB: Tester " + name + " konnte nicht erstellt werden. Existiert bereits, Kit Tier zugewiesen.")
+        return false
+    }
+}
+
 async function getAll() {
     const testers = await Tester.find()
     return testers
@@ -46,6 +61,7 @@ module.exports = {
     find,
     getAll,
     getKit,
+    create,
     getTier,
     incrementPoints
 }

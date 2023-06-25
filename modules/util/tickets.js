@@ -217,15 +217,16 @@ async function sendBoothMessage(moduleId, mainChannel) {
 
     // sends the boothMessage
     const ticketCreationEmbed = new EmbedBuilder()
-        .setColor(0x000000 ) // black
+        .setColor(0xFFFFFF ) // black
         .setTitle('**Ticket Erstellen!**')
         .setAuthor({ name: 'Ticket System', iconURL: 'https://i.imgur.com/ZqUCHT7.png'})
-        .setDescription(`Hier die verschiedenen Möglichkeiten um ein Ticket zu erstellen:
+        .setDescription(`Hier die verschiedenen Möglichkeiten um ein Ticket zu erstellen:\n
  
-            Allgemeiner Support (Fragen/Anliegen)
-            Partner Bewerbung
-            Team Berwerbung (Mod/Dev
-            Report (Bug/User)`)
+            Allgemeiner Support (Fragen/Anliegen)\n
+            Nutzer Report\n
+            Fehlermeldung\n
+            Rollenanfrage
+            `)
     message = await mainChannel.send({ embeds: [ticketCreationEmbed], components: [row]})
         
     setBoothMessage(moduleId, message.id)
@@ -235,7 +236,7 @@ async function sendBoothMessage(moduleId, mainChannel) {
 async function sendTicketMessage(ticketChannel, reason, user, moduleId, ticketInfo) {
     option = conf.modules.tickets.options[reason]
     const ticketEmbed = new EmbedBuilder()
-        .setColor(0x000000) // discord green
+        .setColor(0xFFFFFF) // discord green
         .setTitle(option.label + ' Ticket')
         .setAuthor({ name: user.username, iconURL: await user.displayAvatarURL()})
         .setDescription("Unser Support wurde kontaktiert, bitte habe Geduld.")

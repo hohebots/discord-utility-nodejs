@@ -35,7 +35,7 @@ async function run(interaction) {
         .setTitle('Du wurdest von ' + conf.settings.auth.guildName + ' gebannt!')
         .addFields({ 
             name: 'Bannzeitraum',
-            value: period})
+            voalue: period})
         .setAuthor({ name: 'Banns', iconURL: 'https://i.imgur.com/LmU5d3E.png'})
     try {
         await client.users.send(user.id, {embeds: [userBanEmbed]});

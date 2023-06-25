@@ -55,7 +55,7 @@ async function linkGroup(gID, rID) {
         client = clientStorage.getClientInstance()
         conf = await config.load()
         guildId = conf.settings.auth.guildId
-        guild = client.guilds.cache.get(guildId)
+        guild = client.guilds.fetch(guildId)
         role = await guild.roles.fetch(rID)
         members = role.members
         for (member of members) {
