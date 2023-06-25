@@ -9,7 +9,7 @@ async function updateLocalRepository() {
     sourceRepoURL = conf.settings.git.repo;
 
 
-    await exec(`git pull ${sourceRepoURL}`);
+    await exec(`git pull --branch tierlist ${sourceRepoURL}`);
     v = version.load()
     await log.info("Bot Update wurde durchgeführt und der Bot läuft nun mit Version v" + v, adminRelevant = true)
     return true
