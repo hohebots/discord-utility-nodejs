@@ -36,7 +36,7 @@ async function run(interaction) {
 
         .addFields({ 
           name: "Developer",
-          value: "mths#3066\nhöhe.dev",
+          value: "@hoehe.dev\nwww.höhe.dev",
           inline: false })
 
     await interaction.editReply({ embeds: [interactionSuccessEmbed], ephemeral: true})

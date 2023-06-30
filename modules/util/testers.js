@@ -22,6 +22,11 @@ async function create(id, tier, name, kit) {
     }
 }
 
+async function findByTestPoints(testPoints) {
+    const tester = await Tester.find({testPoints: testPoints})
+    return tester
+}
+
 async function getAll() {
     const testers = await Tester.find()
     return testers
@@ -63,5 +68,6 @@ module.exports = {
     getKit,
     create,
     getTier,
-    incrementPoints
+    incrementPoints,
+    findByTestPoints
 }

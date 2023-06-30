@@ -102,12 +102,29 @@ async function sendTesterStats(moduleId, guild) {
     testerStatsChannel = await guild.channels.fetch(testerStats)
     testerList = "\n"
     allTesters = await testers.getAll()
-    allTestersOrdered = allTesters.sort((a, b) => parseInt(a.testPoints) - parseInt(b.testPoints));
     fetched = await testerStatsChannel.messages.fetch({limit: 100});
+
+
+    // shut the fuck up i know all of this sucks
+    testPointsArray = []
+    for (const currentTester of allTesters) {
+        testPointsArray.push(currentTester.testPoints)
+    } 
+    testPointsArray.sort(function (a, b) {  return a - b;  });
+    testPointsArray = testPointsArray.reverse()
+
     testerStatsChannel.bulkDelete(fetched);
-    allTestersOrdered = allTestersOrdered.reverse()
-    for (let i = 0; i < allTestersOrdered.length; i++) {
-        testerList = testerList + i + ". " + allTestersOrdered[i].name + " " + allTestersOrdered[i].testPoints + "\n"
+    alreadyChecked = []
+    place = 1
+    for (let i = 0; i < testPointsArray.length; i++) {
+        if (!alreadyChecked.includes(testPointsArray[i])) {
+            testPointTesters = await testers.findByTestPoints(testPointsArray[i])
+            for (tester of testPointTesters) {
+                testerList = testerList + place + ". " + tester.name + " " + tester.testPoints + "\n"
+                place = place + 1
+            }
+            alreadyChecked.push(testPointsArray[i])
+        }
     }
     const testerStatsEmbed = new EmbedBuilder()
         .setColor(0xFFFFFF ) // white
