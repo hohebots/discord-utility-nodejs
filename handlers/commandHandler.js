@@ -83,11 +83,9 @@ async function handle(interaction) {
         }
     
     } else if (interaction.isButton()) {
-        try {
+       
             await buttonHandler.handle(interaction)
-        } catch (e){
-            log.error("Fehler bei Button request " + e)
-        }
+    
     }
 }
 

@@ -17,6 +17,11 @@ async function findUserTests(userId) {
     return tests
 }
 
+async function findByCreationDate(creationDate) {
+    const tests = await Test.find({createdAt: creationDate})
+    return tests
+}
+
 async function deleteOne(testId) {
     const test = await Test.findOneAndDelete({id: testId})
     return test
@@ -177,7 +182,26 @@ async function sendPositionChange(testId, moduleId) {
     client = clientStorage.getClientInstance()
     test = await get(testId)
     kit = await kits.find(test.kit)
-    orderedTests = await Test.find({ state: "inactive", moduleId: moduleId}).sort({ createdAt: 1 })
+
+    allTests = await tests.getAllInactive()
+    testCreationTimeArray = []
+    for (const currentTest of allTests) {
+        testCreationTimeArray.push(currentTest.createdAt)
+    } 
+    orderedTests = [];
+    testCreationTimeArray.sort(function (a, b) {  return a - b;  });
+    alreadyChecked = []
+    testList = []
+    for (let i = 0; i < testCreationTimeArray.length; i++) {
+        if (!alreadyChecked.includes(testCreationTimeArray[i])) {
+            creationTimeTests = await tests.findByCreationDate(testCreationTimeArray[i])
+            for (test of creationTimeTests) {
+                orderedTests.push(test);
+            }
+            alreadyChecked.push(testCreationTimeArray[i])
+        }
+    }    
+
     var position = 0
     for (let i = 0; i < orderedTests.length; i++) {
         console.log(orderedTests[i])
@@ -236,5 +260,6 @@ module.exports = {
     getAllInactive,
     findUserTests,
     deleteOne,
-    checkTierValidity
+    checkTierValidity,
+    findByCreationDate
 }

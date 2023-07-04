@@ -154,11 +154,24 @@ async function sendTestOptionsMessage(test, acceptionChannel) {
 }
 
 async function getEarliestTests(moduleId) {
-    const allTests = await Test.find({ state: "inactive", moduleId: moduleId}).sort({ createdAt: 1 }).limit(5)
-    const earliestEntries = [];
-    for (test of allTests) {
-        earliestEntries.push(test);
-    }
+    allTests = await tests.getAllInactive()
+    testCreationTimeArray = []
+    for (const currentTest of allTests) {
+        testCreationTimeArray.push(currentTest.createdAt)
+    } 
+    earliestEntries = [];
+    testCreationTimeArray.sort(function (a, b) {  return a - b;  });
+    alreadyChecked = []
+    testList = []
+    for (let i = 0; i < 5; i++) {
+        if (!alreadyChecked.includes(testCreationTimeArray[i])) {
+            creationTimeTests = await tests.findByCreationDate(testCreationTimeArray[i])
+            for (test of creationTimeTests) {
+                earliestEntries.push(test);
+            }
+            alreadyChecked.push(testCreationTimeArray[i])
+        }
+    }    
     return earliestEntries
 }
 
