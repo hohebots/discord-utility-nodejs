@@ -161,7 +161,7 @@ async function setTester(interaction, potentialModule) {
     
     await tests.setState(testId, "active")
     await testAcceptionChannels.updateAcceptMessage(potentialModule.id)
-if (test.testChannel == "0") {
+    if (test.testChannel == "0") {
         testChannel = await tests.createTestChannel(testId, interaction.guild, testerId) 
     } else {
         testChannel = await interaction.guild.channels.fetch(test.testChannel)
@@ -212,7 +212,7 @@ if (test.testChannel == "0") {
     const row = new ActionRowBuilder()
         .addComponents([acceptTestButton, rejectTestButton, repeatTestButton, changeTesterButton]);
 
-    message = await testChannel.send({ embeds: [testEmbed], components: [row], content: "||@everyone||"})
+    message = await testChannel.send({ embeds: [testEmbed], components: [row], content: "||"+testerUser.toString()+" & " + testUser.toString() + "||"})
     const interactionSuccessEmbed = new EmbedBuilder()
             .setColor(0xFFFFFF) // white
             .setTitle('Test angenommen')

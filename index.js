@@ -57,14 +57,7 @@ async function start() {
     
     ;}
 
-
 start()
-
-
-
-
-
-
 
 // big refactor: give tickets and tests an id instead of passing all the bs arguments through a modal like a fucking retard ew
 // refactor: rename potentialModule to module in modulehandlers
