@@ -178,7 +178,7 @@ async function setFinalTier(testId, tier) {
     test.save()
 }
 
-async function sendPositionChange(testId, moduleId) {
+async function sendPositionChange(testId) {
     client = clientStorage.getClientInstance()
     test = await get(testId)
     kit = await kits.find(test.kit)
@@ -204,9 +204,7 @@ async function sendPositionChange(testId, moduleId) {
 
     var position = 0
     for (let i = 0; i < orderedTests.length; i++) {
-        console.log(orderedTests[i])
         if (orderedTests[i].id == testId) {
-            log.info("Test zum editieren der positionDM gefunden! " + i)
             position = i
             break 
         }
@@ -227,7 +225,7 @@ async function sendPositionChange(testId, moduleId) {
         .addFields({ 
             name: 'Kit:',
             value: kit.name})
-        .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/LmU5d3E.png'})
+        .setAuthor({ name: 'Tierlist', iconURL: 'https://i.imgur.com/5JILqgw.png'})
     
     positionDM.edit({embeds: [positionDMModal]})
 }

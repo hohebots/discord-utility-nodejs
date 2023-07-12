@@ -12,6 +12,7 @@ const { StringSelectMenuBuilder, SelectMenuOptionBuilder, ActionRowBuilder, Embe
 const log = require("../../util/log.js")
 const permissions = require("../../permissions/permissions.js")
 const missingPermissions = require("../../commands/missingPermissions.js")
+const sleep = require('sleep-promise');
 
 async function setup(interaction) {
     const moduleId = randomstring.generate(10)
@@ -237,17 +238,19 @@ async function setTester(interaction, potentialModule) {
     }
     try {
         await client.users.send(testerId, {embeds: [testCreationTesterEmbed]});
-    } catch {
+    } catch {}
+    
+    sendAllPositionChanges()
+    
+}
 
-    }
-     
+async function sendAllPositionChanges() {
+    log.info("Editiere alle Test-DMs")
     for (inactiveTest of await tests.getAllInactive()) {
         try {
-            tests.sendPositionChange(inactiveTest.id, potentialModule.id)
-        } catch (e) {
-            log.error("Konnte Positions Benachrichtigung nicht updaten: " + e)
-        }
-        
+            tests.sendPositionChange(inactiveTest.id)
+        } catch {}
+        await sleep(400);
     }
 }
 

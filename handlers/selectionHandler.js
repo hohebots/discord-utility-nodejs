@@ -18,7 +18,7 @@ async function handle(interaction) {
             } else if (action == "acceptTest") {
                 await tierlistHandler.showTestOptions(interaction, interactionModule)
             } else if (action == "setTester") {
-                await tierlistHandler.setTester(interaction, interactionModule)
+                tierlistHandler.setTester(interaction, interactionModule)
             }
             
         } 
