@@ -32,6 +32,28 @@ async function get(id) {
     return test
 }
 
+async function getOrderedTests() {
+    allTests = await tests.getAllInactive()
+    testCreationTimeArray = []
+    for (const currentTest of allTests) {
+        testCreationTimeArray.push(currentTest.createdAt)
+    } 
+    orderedEntries = [];
+    testCreationTimeArray.sort(function (a, b) {  return a - b;  });
+    alreadyChecked = []
+    testList = []
+    for (let i = 0; i < allTests.length; i++) {
+        if (!alreadyChecked.includes(testCreationTimeArray[i])) {
+            creationTimeTests = await tests.findByCreationDate(testCreationTimeArray[i])
+            for (test of creationTimeTests) {
+                orderedEntries.push(test);
+            }
+            alreadyChecked.push(testCreationTimeArray[i])
+        }
+    }    
+    return orderedEntries
+}
+
 async function deny(id) {
     const test = await get(id)
     test.completedAt = Date.now()
@@ -184,35 +206,13 @@ async function sendPositionChange(testId) {
     kit = await kits.find(test.kit)
 
     allTests = await getAllInactive()
-    testCreationTimeArray = []
-    for (const currentTest of allTests) {
-        testCreationTimeArray.push(currentTest.createdAt)
-    } 
-    orderedTests = [];
-    testCreationTimeArray.sort(function (a, b) {  return a - b;  });
-    alreadyChecked = []
-    testList = []
-    for (let i = 0; i < testCreationTimeArray.length; i++) {
-        if (!alreadyChecked.includes(testCreationTimeArray[i])) {
-            creationTimeTests = await findByCreationDate(testCreationTimeArray[i])
-            for (test of creationTimeTests) {
-                orderedTests.push(test);
-            }
-            alreadyChecked.push(testCreationTimeArray[i])
-        }
-    }    
-
-    var position = 0
-    for (let i = 0; i < orderedTests.length; i++) {
-        if (orderedTests[i].id == testId) {
-            position = i
-            break 
-        }
-    }
+    orderedTests = await getOrderedTests()
     if (test.positionDM == "0") {
         return
     }
+    
     testUser = await client.users.fetch(test.user)
+    console.log(testUser)
     testUserChannel = testUser.dmChannel
     positionDM = await testUserChannel.messages.fetch(test.positionDM)
     

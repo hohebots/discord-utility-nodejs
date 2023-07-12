@@ -241,12 +241,12 @@ async function setTester(interaction, potentialModule) {
     } catch {}
     
     sendAllPositionChanges()
-    
 }
 
 async function sendAllPositionChanges() {
     log.info("Editiere alle Test-DMs")
     for (inactiveTest of await tests.getAllInactive()) {
+        console.log(inactiveTest)
         try {
             tests.sendPositionChange(inactiveTest.id)
         } catch {}

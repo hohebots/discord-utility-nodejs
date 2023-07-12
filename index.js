@@ -40,11 +40,9 @@ async function start() {
     });
 
     client.on('interactionCreate', async interaction => {
-        try {
+       
             await handler.handle(interaction)
-        } catch (e){
-            log.error(e)
-        }
+      
         
         interaction.guild.roles.fetch()
         interaction.guild.channels.fetch()
