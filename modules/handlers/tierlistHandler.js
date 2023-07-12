@@ -248,8 +248,10 @@ async function sendAllPositionChanges() {
     for (inactiveTest of await tests.getAllInactive()) {
         console.log(inactiveTest)
         try {
-            tests.sendPositionChange(inactiveTest.id)
-        } catch {}
+            await tests.sendPositionChange(inactiveTest.id)
+        } catch (e) {
+            log.error("Konnte Positions Benachrichtigung nicht updaten: " + e)
+        }
         await sleep(400);
     }
 }
