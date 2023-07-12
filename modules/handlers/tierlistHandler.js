@@ -344,14 +344,23 @@ async function finishTest(interaction) {
 }
 
 async function enterTestResults(interaction, modalResponse, testInfo) {
+    conf = await config.load()
+    
     finalTier = testInfo.getTextInputValue("finalTier")
     finalIngameName = testInfo.getTextInputValue("finalIngameName")
     testId = modalResponse[1]
     test = await tests.get(testId)
+    roles = conf.modules.tierlist.kits[test.kit]
+    try {
+        member = await interaction.guild.members.fetch(test.user)
+        lowercaseTier = finalTier.toLowerCase();
+        member.roles.add(roles[lowercaseTier[0]])
+    } catch {}
     
     testChannel = await interaction.guild.channels.fetch(test.testChannel)
     await tests.setState(testId, "closed")
     await tests.setCompleted(testId)
+
     await testers.incrementPoints(test.tester)
     waitlists.sendTesterStats(test.moduleId, interaction.guild)
     await tests.setFinalTier(testId, finalTier)

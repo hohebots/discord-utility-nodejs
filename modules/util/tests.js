@@ -183,7 +183,7 @@ async function sendPositionChange(testId, moduleId) {
     test = await get(testId)
     kit = await kits.find(test.kit)
 
-    allTests = await tests.getAllInactive()
+    allTests = await getAllInactive()
     testCreationTimeArray = []
     for (const currentTest of allTests) {
         testCreationTimeArray.push(currentTest.createdAt)
@@ -194,7 +194,7 @@ async function sendPositionChange(testId, moduleId) {
     testList = []
     for (let i = 0; i < testCreationTimeArray.length; i++) {
         if (!alreadyChecked.includes(testCreationTimeArray[i])) {
-            creationTimeTests = await tests.findByCreationDate(testCreationTimeArray[i])
+            creationTimeTests = await findByCreationDate(testCreationTimeArray[i])
             for (test of creationTimeTests) {
                 orderedTests.push(test);
             }
