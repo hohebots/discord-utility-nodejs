@@ -359,7 +359,8 @@ async function enterTestResults(interaction, modalResponse, testInfo) {
     try {
         member = await interaction.guild.members.fetch(test.user)
         lowercaseTier = finalTier.toLowerCase();
-        member.roles.add(roles[lowercaseTier[0]])
+        role = await interaction.guild.roles.fetch(roles[lowercaseTier[0]])
+        member.roles.add(role)
     } catch {}
     
     testChannel = await interaction.guild.channels.fetch(test.testChannel)

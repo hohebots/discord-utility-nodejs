@@ -33,7 +33,7 @@ async function get(id) {
 }
 
 async function getOrderedTests() {
-    allTests = await tests.getAllInactive()
+    allTests = await getAllInactive()
     testCreationTimeArray = []
     for (const currentTest of allTests) {
         testCreationTimeArray.push(currentTest.createdAt)
@@ -44,7 +44,7 @@ async function getOrderedTests() {
     testList = []
     for (let i = 0; i < allTests.length; i++) {
         if (!alreadyChecked.includes(testCreationTimeArray[i])) {
-            creationTimeTests = await tests.findByCreationDate(testCreationTimeArray[i])
+            creationTimeTests = await findByCreationDate(testCreationTimeArray[i])
             for (test of creationTimeTests) {
                 orderedEntries.push(test);
             }
