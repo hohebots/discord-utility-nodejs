@@ -203,14 +203,15 @@ async function setFinalTier(testId, tier) {
 async function sendPositionChange(testId) {
     client = clientStorage.getClientInstance()
     test = await get(testId)
+    if (test.positionDM == "0") {
+        return
+    }
     console.log(test)
     kit = await kits.find(test.kit)
 
     allTests = await getAllInactive()
     orderedTests = await getOrderedTests()
-    if (test.positionDM == "0") {
-        return
-    }
+    
     
     testUser = await client.users.fetch(test["user"])
     console.log(testUser)
