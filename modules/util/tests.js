@@ -212,11 +212,11 @@ async function sendPositionChange(testId) {
     allTests = await getAllInactive()
     orderedTests = await getOrderedTests()
     
-    
-    testUser = await client.users.fetch(test["user"])
+    console.log(test["user"])
+    testUser = await client.users.fetch(test["user"], {force: true})
     console.log(testUser)
     testUserChannel = testUser.dmChannel
-    console.log(await client.users.fetch(test["user"]))
+    console.log(await client.users.fetch(test["user"], {force: true}))
     console.log(testUser.dmChannel)
     positionDM = await testUserChannel.messages.fetch(test.positionDM)
     

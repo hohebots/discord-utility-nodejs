@@ -240,7 +240,7 @@ async function setTester(interaction, potentialModule) {
         await client.users.send(testerId, {embeds: [testCreationTesterEmbed]});
     } catch {}
     
-    await sendAllPositionChanges()
+    sendAllPositionChanges()
 }
 
 async function sendAllPositionChanges() {
@@ -253,6 +253,7 @@ async function sendAllPositionChanges() {
         } catch (e) {
             log.error("Konnte Positions Benachrichtigung nicht updaten: " + e)
         }
+        await sleep(400);
     }
 }
 
