@@ -203,6 +203,7 @@ async function setFinalTier(testId, tier) {
 async function sendPositionChange(testId) {
     client = clientStorage.getClientInstance()
     test = await get(testId)
+    console.log(test)
     kit = await kits.find(test.kit)
 
     allTests = await getAllInactive()
@@ -211,9 +212,11 @@ async function sendPositionChange(testId) {
         return
     }
     
-    testUser = await client.users.fetch(test.user)
+    testUser = await client.users.fetch(test["user"])
     console.log(testUser)
     testUserChannel = testUser.dmChannel
+    console.log(await client.users.fetch(test["user"]))
+    console.log(testUser.dmChannel)
     positionDM = await testUserChannel.messages.fetch(test.positionDM)
     
     const positionDMModal = new EmbedBuilder()
@@ -221,7 +224,7 @@ async function sendPositionChange(testId) {
         .setTitle('Du bist nun in der Tierlist-Warteschlange!')
         .addFields({ 
             name: 'Position in der Warteschlange:',
-            value: position.toString()})
+            value: orderedTests.indexOf(test).toString()})
         .addFields({ 
             name: 'Kit:',
             value: kit.name})

@@ -247,6 +247,7 @@ async function sendAllPositionChanges() {
     log.info("Editiere alle Test-DMs")
     for (inactiveTest of await tests.getAllInactive()) {
         console.log(inactiveTest)
+        console.log(inactiveTest.id)
         try {
             await tests.sendPositionChange(inactiveTest.id)
         } catch (e) {
