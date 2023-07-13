@@ -203,6 +203,7 @@ async function setFinalTier(testId, tier) {
 async function sendPositionChange(testId) {
     client = clientStorage.getClientInstance()
     test = await get(testId)
+    testUserId = test.user
     if (test.positionDM == "0") {
         return
     }
@@ -212,11 +213,11 @@ async function sendPositionChange(testId) {
     allTests = await getAllInactive()
     orderedTests = await getOrderedTests()
     
-    console.log(test["user"])
-    testUser = await client.users.fetch(test["user"], {force: true})
+    console.log(testUserId)
+    testUser = await client.users.fetch(testUserId, {force: true})
     console.log(testUser)
     testUserChannel = testUser.dmChannel
-    console.log(await client.users.fetch(test["user"], {force: true}))
+    console.log(await client.users.fetch(testUserId, {force: true}))
     console.log(testUser.dmChannel)
     positionDM = await testUserChannel.messages.fetch(test.positionDM)
     
