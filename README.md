@@ -1,1 +1,0 @@
-includes payment with stripe
