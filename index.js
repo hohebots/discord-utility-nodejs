@@ -47,26 +47,3 @@ async function start() {
 
 
 start()
-
-
-
-
-
-
-
-// big refactor: give tickets and tests an id instead of passing all the bs arguments through a modal like a fucking retard ew
-// refactor: rename potentialModule to module in modulehandlers
-
-// refactor: move functions from info.js to util
-// refactor: split util/tickets.js to tickets.js and ticketBooths.js 
-// refactor: rename permissions directory
-// refactor: subcommands folder for each command
-// refactor: give every command a folder
-// refactor: change file.js imports to file 
-// todo: switch to better image uploader
-// todo: redo module system so /setup autocompletes with all modules dynamically
-// todo: save open ticket modal responses in db so tickets.reload can recover them
-// todo: optimsations regarding asynchronous running of commands
-// todo: comment everything and do documentation
-// todo: replace all get from cache instances with .fetch() for better overall performance
-// todo: fix /tickets view permission removal
