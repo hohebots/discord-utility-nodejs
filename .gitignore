@@ -1,1 +1,4 @@
 config.toml
+api/cert/cert.pem
+api/cert/key.pem
+todo.txt

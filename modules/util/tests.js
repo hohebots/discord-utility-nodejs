@@ -12,6 +12,11 @@ async function find(userId, kitId, moduleId) {
     return test
 }
 
+async function findClosedByKit(kitId) {
+    const kitTests = await Test.find({kit: kitId, state: "closed"})
+    return kitTests
+}
+
 async function findUserTests(userId) {
     const tests = await Test.find({user: userId})
     return tests
@@ -264,5 +269,6 @@ module.exports = {
     findUserTests,
     deleteOne,
     checkTierValidity,
-    findByCreationDate
+    findByCreationDate,
+    findClosedByKit
 }

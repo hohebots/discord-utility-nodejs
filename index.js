@@ -5,7 +5,7 @@ const database = require("./permissions/database.js")
 const permissions = require("./permissions/permissions.js")
 const handler = require("./handlers/commandHandler.js")
 const memberLeaveHandler = require("./handlers/memberLeaveHandler.js")
-
+const api = require("./api/index.js")
 const bans = require("./permissions/bans.js")
 const clientStorage = require("./util/client.js")
 const { Client, GatewayIntentBits } = require("discord.js")
@@ -23,6 +23,7 @@ async function start() {
 
     await client.login(settings["token"]);
     
+    api.start()
     deploy.commands()
     database.connect()
     database.startLogger()
@@ -58,24 +59,3 @@ async function start() {
     ;}
 
 start()
-
-// big refactor: give tickets and tests an id instead of passing all the bs arguments through a modal like a fucking retard ew
-// refactor: rename potentialModule to module in modulehandlers
-// todo: redo giveaways
-// todo: implement verifying if a user is still in guild when accepting test
-// todo: remove users from waitlist on leave
-
-// todo: help commands
-// refactor: move functions from info.js to util
-// refactor: split util/tickets.js to tickets.js and ticketBooths.js 
-// refactor: rename permissions directory
-// refactor: subcommands folder for each command
-// refactor: give every command a folder
-// refactor: change file.js imports to file 
-// todo: switch to better image uploader
-// todo: redo module system so /setup autocompletes with all modules dynamically
-// todo: save open ticket modal responses in db so tickets.reload can recover them
-// todo: optimsations regarding asynchronous running of commands
-// todo: comment everything and do documentation
-// todo: replace all get from cache instances with .fetch() for better overall performance
-// todo: fix /tickets view permission removal
